@@ -1,0 +1,4 @@
+import { ScholarshipFinderModule } from '../components/scholarships';
+
+// Inside your dashboard tabs/routes:
+{activeTab === 'scholarships' && <ScholarshipFinderModule />}
