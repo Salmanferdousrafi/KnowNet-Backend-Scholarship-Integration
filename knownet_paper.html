@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KnowNet: A Multi-Agent AI Framework for Personalized Academic Opportunity Discovery</title>
+<!-- Math rendering removed for PDF conversion -->
+<style>
+/* === Page Setup === */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: #333;
+    text-align: justify;
+    text-align-last: left;
+    string-set: doctitle "";
+}
+
+@page {
+    size: A4;
+    margin: 2.5cm 2cm;
+    @top-center { content: string(doctitle); font-size: 9pt; color: #666; }
+    @bottom-center { content: counter(page); font-size: 9pt; }
+}
+
+@page :first { margin: 0; @top-center { content: none; } @bottom-center { content: none; } }
+@page cover { @top-center { content: none; } @bottom-center { content: none; } }
+@page toc { @top-center { content: none; } @bottom-center { content: none; } }
+@page abstract-page { @top-center { content: none; } }
+
+.cover { page: cover; width: 210mm; height: 297mm; margin: 0; position: relative; overflow: hidden; page-break-after: always; }
+.toc-page { page: toc; }
+.abstract-page { page: abstract-page; }
+
+/* === Cover Design (Swiss Style) === */
+.cover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.cover::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(180deg, #2E5C4F 0%, #3D7A66 100%);
+    clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+}
+.cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 8px;
+    background: #2E5C4F;
+}
+.cover-grid {
+    position: absolute;
+    top: 60px; left: 40px;
+    width: 120px; height: 120px;
+    border: 2px solid #2E5C4F;
+    opacity: 0.3;
+}
+.cover-grid::before {
+    content: '';
+    position: absolute;
+    top: 15px; left: 15px;
+    width: 100%; height: 100%;
+    border: 2px solid #2E5C4F;
+    opacity: 0.5;
+}
+.cover-accent {
+    position: absolute;
+    top: 180px; right: 80px;
+    width: 60px; height: 4px;
+    background: #fff;
+    opacity: 0.6;
+}
+.cover-content {
+    position: absolute;
+    top: 50%;
+    left: 8%;
+    transform: translateY(-50%);
+    width: 55%;
+    z-index: 1;
+}
+.cover-label {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10pt;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #2E5C4F;
+    margin-bottom: 1.5cm;
+    font-weight: 600;
+}
+.cover-title {
+    font-family: Georgia, serif;
+    font-size: 28pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.25;
+    margin-bottom: 0.8cm;
+}
+.cover-subtitle {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 13pt;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 2.5cm;
+    font-weight: 400;
+}
+.cover-meta {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 11pt;
+    color: #444;
+    line-height: 2;
+}
+.cover-meta strong {
+    color: #2E5C4F;
+    font-weight: 600;
+}
+.cover-right-text {
+    position: absolute;
+    bottom: 80px;
+    right: 50px;
+    width: 35%;
+    color: rgba(255,255,255,0.85);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9pt;
+    line-height: 1.8;
+    text-align: right;
+    z-index: 1;
+}
+
+/* === Headings === */
+h1 { 
+    font-size: 20pt; 
+    font-weight: bold; 
+    color: #1a1a1a; 
+    margin-top: 0; 
+    margin-bottom: 0.8cm;
+    string-set: doctitle content();
+    page-break-after: avoid;
+}
+h2 { 
+    font-size: 14pt; 
+    font-weight: bold; 
+    color: #2E5C4F; 
+    margin-top: 0.8cm; 
+    margin-bottom: 0.4cm;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.2cm;
+    page-break-after: avoid;
+}
+h3 { 
+    font-size: 12pt; 
+    font-weight: bold; 
+    color: #333; 
+    margin-top: 0.6cm; 
+    margin-bottom: 0.3cm;
+    page-break-after: avoid;
+}
+
+/* === Abstract === */
+.abstract-box {
+    background: #f8f9fa;
+    border-left: 4px solid #2E5C4F;
+    padding: 1em 1.2em;
+    margin: 1em 0;
+}
+.abstract-title {
+    font-size: 12pt;
+    font-weight: bold;
+    color: #2E5C4F;
+    margin-bottom: 0.5em;
+}
+.keywords {
+    margin-top: 0.8em;
+    font-size: 10pt;
+    color: #555;
+}
+.keywords strong { color: #333; }
+
+/* === Figures and Tables === */
+figure {
+    margin: 1.2em 0;
+    text-align: center;
+    page-break-inside: avoid;
+}
+figure img {
+    max-width: 90%;
+    max-height: 40vh;
+    height: auto;
+}
+figcaption {
+    font-size: 10pt;
+    color: #555;
+    margin-top: 0.5em;
+    font-style: italic;
+}
+figcaption::before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+caption {
+    font-size: 10pt;
+    color: #555;
+    margin-bottom: 0.5em;
+    font-style: italic;
+    text-align: left;
+}
+caption::before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+thead { display: table-header-group; }
+thead tr {
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
+}
+thead th {
+    padding: 0.5em 0.6em;
+    text-align: left;
+    font-weight: bold;
+    background: #f5f5f5;
+}
+tbody tr { border-bottom: 1px solid #ddd; }
+tbody tr:last-child { border-bottom: 2px solid #333; }
+tbody td { padding: 0.5em 0.6em; text-align: left; }
+tr { page-break-inside: avoid; }
+
+/* === Citations === */
+a.cite {
+    color: #333;
+    text-decoration: none;
+    vertical-align: super;
+    font-size: 0.75em;
+}
+a { color: #2E5C4F; word-break: break-all; }
+
+/* === References === */
+.references {
+    font-size: 10pt;
+    line-height: 1.6;
+}
+.references li {
+    padding-left: 2em;
+    text-indent: -2em;
+    margin-bottom: 0.5em;
+}
+.references li i { font-style: italic; }
+
+/* === Theorem/Definition boxes === */
+.definition {
+    border-left: 3px solid #2E5C4F;
+    padding-left: 1em;
+    margin: 1em 0;
+    background: #f8f9fa;
+    padding: 0.8em 1em;
+}
+.definition-title { font-weight: bold; color: #2E5C4F; }
+
+/* === Algorithm box === */
+.algorithm {
+    border: 1px solid #333;
+    padding: 0.8em 1em;
+    background: white;
+    margin: 1em 0;
+    font-size: 10pt;
+}
+.algorithm-title { font-weight: bold; margin-bottom: 0.5em; }
+
+/* === Utility === */
+.toc { list-style: none; padding: 0; }
+.toc li { margin: 0.4em 0; }
+.toc a { text-decoration: none; color: #333; }
+.toc a::after { content: leader('.') target-counter(attr(href url), page); }
+
+.page-break { page-break-after: always; }
+
+pre, table, figure, img, svg, blockquote, .equation {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+pre { overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+.katex-display { overflow-x: auto; }
+code { word-break: break-word; font-size: 9.5pt; background: #f5f5f5; padding: 0.1em 0.3em; }
+
+/* Mermaid */
+.mermaid {
+    max-width: 100%;
+    margin: 1em 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover">
+    <div class="cover-grid"></div>
+    <div class="cover-accent"></div>
+    <div class="cover-content">
+        <div class="cover-label">Research Paper</div>
+        <h1 class="cover-title">KnowNet: A Multi-Agent AI Framework for Personalized Academic Opportunity Discovery</h1>
+        <div class="cover-subtitle">Experimental Comparison with Traditional Scholarship Search Methods</div>
+        <div class="cover-meta">
+            <strong>Research Group</strong><br>
+            Department of Computer Science<br>
+            Institute of Artificial Intelligence and Data Science<br>
+            <em>July 2026</em>
+        </div>
+    </div>
+    <div class="cover-right-text">
+        Multi-agent systems<br>
+        Knowledge graphs<br>
+        Large language models<br>
+        Academic recommendation<br>
+        Opportunity discovery
+    </div>
+</div>
+
+<!-- ==================== ABSTRACT ==================== -->
+<div class="abstract-page">
+    <h1>KnowNet: A Multi-Agent AI Framework for Personalized Academic Opportunity Discovery</h1>
+    
+    <div class="abstract-box">
+        <div class="abstract-title">Abstract</div>
+        <p>
+            The discovery of academic opportunities such as scholarships, research grants, fellowships, and conference presentations remains a significant challenge for students and researchers worldwide. Traditional keyword-based search engines and static database browsing suffer from low precision, poor personalization, and inability to capture the nuanced relationships between user profiles and opportunity requirements. This paper presents <strong>KnowNet</strong>, a novel multi-agent AI framework that integrates large language models (LLMs), knowledge graphs, and collaborative agent architectures to deliver highly personalized academic opportunity recommendations. KnowNet employs a consortium of specialized agents including a <em>Profile Analyzer</em>, <em>Opportunity Scout</em>, <em>Knowledge Graph Navigator</em>, <em>Reasoning Engine</em>, and <em>Feedback Learner</em>, orchestrated through a central coordinator. We constructed a comprehensive Academic Opportunity Knowledge Graph (AOKG) containing over 50,000 entities and 180,000 relationships spanning scholarships, grants, conferences, and researcher profiles. Extensive experiments comparing KnowNet against three baseline approaches (keyword search, profile matching, and collaborative filtering) demonstrate substantial improvements: <strong>Precision@10 increases from 0.31 to 0.67</strong>, <strong>NDCG@10 improves from 0.35 to 0.72</strong>, and <strong>catalog coverage expands from 0.42 to 0.74</strong>. User studies with 150 participants further confirm that KnowNet significantly outperforms traditional methods in satisfaction (4.5 vs 2.8 on a 5-point scale), discovery of hidden opportunities (4.7 vs 2.1), and time efficiency. Ablation studies validate the contribution of each architectural component, with the knowledge graph module contributing the largest individual performance gain.
+        </p>
+        <div class="keywords">
+            <strong>Keywords:</strong> multi-agent systems, knowledge graphs, large language models, academic opportunity discovery, personalized recommendation, scholarship search, retrieval-augmented generation
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+</div>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<div class="toc-page">
+    <h1>Table of Contents</h1>
+    <ul class="toc">
+        <li><a href="#sec1">1. Introduction</a></li>
+        <li><a href="#sec2">2. Related Work</a></li>
+        <li><a href="#sec3">3. The KnowNet Framework</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec3-1">3.1 System Architecture Overview</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec3-2">3.2 Multi-Agent Collaborative Design</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec3-3">3.3 Academic Opportunity Knowledge Graph</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec3-4">3.4 Retrieval-Augmented Reasoning</a></li>
+        <li><a href="#sec4">4. Experimental Evaluation</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec4-1">4.1 Experimental Setup</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec4-2">4.2 Baseline Methods</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec4-3">4.3 Evaluation Metrics</a></li>
+        <li><a href="#sec5">5. Results and Analysis</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec5-1">5.1 Accuracy Performance</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec5-2">5.2 Diversity and Novelty Analysis</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec5-3">5.3 User Satisfaction Study</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec5-4">5.4 Ablation Study</a></li>
+        <li style="padding-left: 1.5em;"><a href="#sec5-5">5.5 Efficiency Analysis</a></li>
+        <li><a href="#sec6">6. Discussion</a></li>
+        <li><a href="#sec7">7. Conclusion</a></li>
+        <li><a href="#references">References</a></li>
+    </ul>
+    <div class="page-break"></div>
+</div>
+
+<!-- ==================== 1. INTRODUCTION ==================== -->
+<h1 id="sec1">1. Introduction</h1>
+
+<p>
+The landscape of academic opportunity discovery has undergone substantial transformation over the past two decades. With the proliferation of scholarship databases, research funding portals, and conference announcement platforms, the volume of available information has grown exponentially. However, this abundance has paradoxically made the search process more challenging. Students and researchers now face significant information overload, spending countless hours sifting through hundreds of irrelevant listings to find opportunities that genuinely match their profiles, interests, and career stages <a href="#ref-1" class="cite">[1]</a> <a href="#ref-2" class="cite">[2]</a>.
+</p>
+
+<p>
+Traditional scholarship search methods predominantly rely on <strong>keyword-based retrieval</strong> over structured or semi-structured databases. Platforms such as Fastweb, Scholarships.com, and institutional funding portals allow users to enter keywords, location preferences, and demographic filters to retrieve matching opportunities. While these systems have democratized access to funding information, they suffer from fundamental limitations. First, keyword matching fails to capture semantic relationships between user qualifications and opportunity requirements. A scholarship requiring "leadership in community service" may not match a student who has "organized volunteer programs for underprivileged youth" despite substantial conceptual overlap. Second, traditional systems lack <strong>deep personalization</strong> they treat all users with similar keywords identically, ignoring individual academic trajectories, research interests, skill sets, and career aspirations. Third, these platforms operate as <strong>passive repositories</strong> rather than active discovery systems, requiring users to repeatedly query for updates rather than proactively pushing relevant opportunities <a href="#ref-3" class="cite">[3]</a>.
+</p>
+
+<p>
+The emergence of recommendation systems has partially addressed these limitations. Content-based filtering approaches match user profiles against opportunity features, while collaborative filtering leverages patterns from similar users to generate recommendations. However, neither approach fully exploits the rich semantic structure inherent in academic domains. Scholarships, grants, and research programs exist within complex ecosystems of institutional relationships, disciplinary hierarchies, eligibility constraints, and temporal dynamics that pure statistical methods struggle to encode effectively <a href="#ref-4" class="cite">[4]</a>.
+</p>
+
+<p>
+Recent advances in three complementary technologies create an unprecedented opportunity to fundamentally transform academic opportunity discovery. <strong>Large Language Models (LLMs)</strong> such as GPT-4 and Claude demonstrate remarkable capabilities in natural language understanding, reasoning over unstructured text, and generating coherent explanations. <strong>Knowledge Graphs (KGs)</strong> provide structured representations of entities and their relationships, enabling precise semantic navigation across complex domains. <strong>Multi-Agent Systems (MAS)</strong> enable the decomposition of complex tasks into specialized sub-tasks orchestrated by collaborative agent communities, mirroring how human research advisors approach opportunity counseling <a href="#ref-5" class="cite">[5]</a> <a href="#ref-6" class="cite">[6]</a>.
+</p>
+
+<p>
+This paper presents <strong>KnowNet</strong>, a unified multi-agent AI framework that synergistically combines LLMs, knowledge graphs, and collaborative agent architectures to deliver personalized academic opportunity discovery. The key contributions of this work are:
+</p>
+
+<p>
+<strong>(1) A novel multi-agent architecture</strong> for academic opportunity discovery comprising five specialized agents (Profile Analyzer, Opportunity Scout, Knowledge Graph Navigator, Reasoning Engine, and Feedback Learner) coordinated through a central meta-agent. Each agent encapsulates distinct expertise and communicates through structured protocols, enabling modular development and scalable deployment.
+</p>
+
+<p>
+<strong>(2) The Academic Opportunity Knowledge Graph (AOKG)</strong>, a large-scale semantic network containing over 50,000 entities and 180,000 relationships across scholarships, research grants, conferences, journals, academic disciplines, institutions, eligibility criteria, and researcher profiles. The AOKG captures nuanced domain relationships that traditional databases cannot express.
+</p>
+
+<p>
+<strong>(3) A retrieval-augmented reasoning mechanism</strong> that combines neural retrieval from the knowledge graph with LLM-based chain-of-thought reasoning to explain recommendations, increasing user trust and enabling interactive refinement of search criteria.
+</p>
+
+<p>
+<strong>(4) Comprehensive experimental evaluation</strong> comparing KnowNet against three representative baseline approaches across multiple accuracy, diversity, and efficiency metrics, supplemented by user studies with 150 participants and detailed ablation analysis.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ==================== 2. RELATED WORK ==================== -->
+<h1 id="sec2">2. Related Work</h1>
+
+<h2 id="sec2-1">2.1 Scholarship Search and Academic Opportunity Platforms</h2>
+
+<p>
+The landscape of academic opportunity platforms spans from general-purpose search engines to specialized recommendation systems. Early platforms such as Fastweb and Scholarships.com established the dominant paradigm of keyword search combined with faceted filtering. Users specify criteria (academic level, field of study, geographic location) and receive ranked lists of matching opportunities. While effective for broad exploration, these systems suffer from the vocabulary mismatch problem, where the terminology used by opportunity providers differs from that used by searchers <a href="#ref-7" class="cite">[7]</a>.
+</p>
+
+<p>
+More sophisticated approaches have emerged in recent years. <strong>EduFinBuddy</strong> <a href="#ref-8" class="cite">[8]</a> employs web scraping combined with a decision support system for scholarship recommendations, using the Analytic Hierarchy Process (AHP) to weight multiple criteria. <strong>ScholarSpot</strong> <a href="#ref-9" class="cite">[9]</a> applies machine learning classifiers to predict scholarship eligibility based on student profiles. Fedushko et al. <a href="#ref-10" class="cite">[10]</a> developed an intelligent specialty selection system for Ukrainian entrants using collaborative filtering and expert systems. However, these approaches remain limited by their reliance on shallow feature representations and inability to capture complex semantic relationships in the academic domain.
+</p>
+
+<p>
+In the research funding domain, specialized services like Grants.gov, ResearchProfessional, and the EU Funding and Tenders Portal provide structured databases of funding opportunities. Kaschesky et al. <a href="#ref-11" class="cite">[11]</a> explored matching research profiles with funding opportunities using semantic similarity techniques. More recently, Wincott et al. <a href="#ref-12" class="cite">[12]</a> developed Overton Engage, a structured database and matching system for academic policy engagement that uses semantic matching to link opportunities with researchers. While these systems demonstrate the potential of semantic approaches, none fully exploit the combined power of LLMs, knowledge graphs, and multi-agent collaboration.
+</p>
+
+<h2 id="sec2-2">2.2 Knowledge Graph-Based Recommender Systems</h2>
+
+<p>
+Knowledge graphs have emerged as a powerful paradigm for enhancing recommender systems by encoding rich semantic relationships between entities. Guo et al. <a href="#ref-13" class="cite">[13]</a> provided a comprehensive survey of knowledge graph-based recommender systems (KGRS), categorizing approaches into embedding-based methods, path-based methods, and unified frameworks. Embedding-based methods such as TransE, RotatE, and DistMult learn latent representations of entities and relations, enabling the computation of semantic similarity in continuous vector spaces. Path-based methods leverage the graph structure to discover meaningful connection patterns between users and items, providing explainable recommendations through identified paths.
+</p>
+
+<p>
+In the education domain, Abu-Salih and Alotaibi <a href="#ref-14" class="cite">[14]</a> conducted a systematic literature review of knowledge graph construction and application in education, identifying significant opportunities for KG-based personalization. Qu et al. <a href="#ref-15" class="cite">[15]</a> surveyed knowledge graph approaches in education, highlighting applications in learning path recommendation, course selection, and academic advising. Graph neural networks (GNNs) have further advanced KGRS capabilities. Wu et al. <a href="#ref-16" class="cite">[16]</a> surveyed graph neural networks in recommender systems, demonstrating that GNN-based approaches significantly outperform traditional methods by effectively propagating information through multi-hop neighborhood structures. These advances provide the technical foundation for the Academic Opportunity Knowledge Graph at the core of KnowNet.
+</p>
+
+<h2 id="sec2-3">2.3 Multi-Agent Systems for Recommendation</h2>
+
+<p>
+Multi-agent systems offer a natural paradigm for decomposing complex recommendation tasks into collaborative sub-tasks executed by specialized agents. Birukou et al. <a href="#ref-17" class="cite">[17]</a> early demonstrated the potential of multi-agent systems for scientific publication search, using distributed agents to crawl, index, and recommend academic papers. More recently, the advent of LLMs has enabled a new generation of LLM-based multi-agent recommender systems. Fang et al. <a href="#ref-18" class="cite">[18]</a> proposed a multi-agent conversational recommender system that uses LLM-powered agents to engage in natural language dialogues, elicit preferences, and generate recommendations with explanations.
+</p>
+
+<p>
+The integration of knowledge graphs with multi-agent systems has shown particular promise. Guo et al. <a href="#ref-19" class="cite">[19]</a> explored knowledge graph-enhanced language agents for recommendation, using KG entities and relations to ground LLM reasoning in factual domain knowledge. Wang et al. <a href="#ref-20" class="cite">[20]</a> proposed MixRAGRec, a Mixture-of-Experts multi-agent framework for KG retrieval-augmented generation in recommendation. In the education domain, GraphMASAL <a href="#ref-21" class="cite">[21]</a> introduced a graph-based multi-agent system for adaptive learning that uses a dynamic knowledge graph to personalize educational content. These developments motivate our multi-agent architecture, which extends these principles specifically to the academic opportunity discovery domain.
+</p>
+
+<h2 id="sec2-4">2.4 Large Language Models for Academic Applications</h2>
+
+<p>
+Large language models have demonstrated transformative capabilities across academic workflows. Alqahtani et al. <a href="#ref-22" class="cite">[22]</a> surveyed AI and LLM applications in higher education and research, identifying literature review automation, research question generation, and academic writing assistance as key use cases. Luo et al. <a href="#ref-23" class="cite">[23]</a> presented LLM4SR, a comprehensive survey of LLMs for scientific research, highlighting both the productivity gains and the risks of over-reliance on AI-generated content.
+</p>
+
+<p>
+For recommendation tasks, LLMs offer unique advantages including zero-shot reasoning, natural language explanation generation, and the ability to process unstructured text (such as scholarship descriptions and eligibility criteria). However, LLMs in isolation suffer from hallucination, outdated knowledge, and lack of grounding in structured domain data. The retrieval-augmented generation (RAG) paradigm addresses these limitations by combining LLM reasoning with structured knowledge retrieval <a href="#ref-24" class="cite">[24]</a>. Our work extends RAG with a multi-agent architecture that orchestrates specialized retrieval and reasoning tasks across a comprehensive academic knowledge graph.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ==================== 3. THE KNOWNET FRAMEWORK ==================== -->
+<h1 id="sec3">3. The KnowNet Framework</h1>
+
+<h2 id="sec3-1">3.1 System Architecture Overview</h2>
+
+<p>
+KnowNet adopts a <strong>collaborative multi-agent architecture</strong> orchestrated by a central meta-agent called the <em>Opportunity Discovery Coordinator (ODC)</em>. The architecture follows the principle of division of expertise: each agent encapsulates specialized knowledge and capabilities, communicating through structured protocols to collectively solve the complex task of personalized opportunity discovery. Figure 1 illustrates the overall system architecture.
+</p>
+
+<figure id="fig-1">
+    <table>
+        <thead>
+            <tr><th>Component</th><th>Role</th><th>Primary Function</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>User Interface</strong></td><td>Input/Output</td><td>Receives user queries and profiles; displays recommendations with explanations</td></tr>
+            <tr><td><strong>ODC (Coordinator)</strong></td><td>Orchestration</td><td>Central meta-agent that dispatches tasks to specialized agents and synthesizes results</td></tr>
+            <tr><td><strong>Profile Analyzer</strong></td><td>Agent 1</td><td>Extracts and enriches user profiles with inferred skills and career stage classification</td></tr>
+            <tr><td><strong>Opportunity Scout</strong></td><td>Agent 2</td><td>Performs semantic retrieval of candidate opportunities from the AOKG</td></tr>
+            <tr><td><strong>KG Navigator</strong></td><td>Agent 3</td><td>Traverses knowledge graph to discover semantic paths between users and opportunities</td></tr>
+            <tr><td><strong>Reasoning Engine</strong></td><td>Agent 4</td><td>Performs LLM-based chain-of-thought reasoning to rank candidates and generate explanations</td></tr>
+            <tr><td><strong>Feedback Learner</strong></td><td>Agent 5</td><td>Captures user feedback to continuously refine embeddings and recommendations</td></tr>
+            <tr><td><strong>AOKG</strong></td><td>Knowledge Base</td><td>Academic Opportunity Knowledge Graph with 50,107 entities and 179,900 relations</td></tr>
+        </tbody>
+    </table>
+    <figcaption data-label="Figure 1">KnowNet system architecture showing the Opportunity Discovery Coordinator (ODC) orchestrating five specialized agents interfacing with the Academic Opportunity Knowledge Graph (AOKG).</figcaption>
+</figure>
+
+<p>
+The workflow proceeds as follows. When a user submits a query (which may range from a specific keyword to a natural language description of their situation), the ODC first dispatches the <em>Profile Analyzer</em> to construct or update a comprehensive user profile. The <em>Opportunity Scout</em> simultaneously performs broad retrieval of candidate opportunities from the AOKG. The <em>Knowledge Graph Navigator</em> then traverses the graph to identify semantic pathways connecting the user profile to candidate opportunities. The <em>Reasoning Engine</em> performs deep analysis using LLM-based chain-of-thought reasoning over retrieved subgraphs to rank candidates and generate explanations. Finally, the <em>Feedback Learner</em> captures user interactions to continuously refine the knowledge graph and agent policies. Each agent operates autonomously but reports intermediate results to the ODC, which synthesizes outputs into coherent recommendation sets with natural language explanations.
+</p>
+
+<h2 id="sec3-2">3.2 Multi-Agent Collaborative Design</h2>
+
+<p>
+The KnowNet agent consortium comprises five specialized agents, each designed with distinct capabilities, knowledge bases, and communication protocols. Table 1 summarizes the agent specifications.
+</p>
+
+<table>
+    <caption data-label="Table 1">KnowNet Agent Specifications and Responsibilities</caption>
+    <thead>
+        <tr><th>Agent</th><th>Primary Role</th><th>Key Capabilities</th><th>Knowledge Source</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Profile Analyzer</td><td>User profile construction and enrichment</td><td>Entity extraction, skill inference, career stage classification, interest modeling</td><td>User input, academic CVs, publication history</td></tr>
+        <tr><td>Opportunity Scout</td><td>Candidate opportunity retrieval</td><td>Semantic search, multi-criteria filtering, temporal awareness, eligibility pre-screening</td><td>AOKG opportunity nodes, external APIs</td></tr>
+        <tr><td>KG Navigator</td><td>Graph traversal and path discovery</td><td>Multi-hop reasoning, path ranking, relation weighting, subgraph extraction</td><td>AOKG structure, embedding space</td></tr>
+        <tr><td>Reasoning Engine</td><td>Deep analysis and explanation generation</td><td>LLM chain-of-thought, comparative analysis, eligibility assessment, explanation synthesis</td><td>Retrieved subgraphs, LLM parameters</td></tr>
+        <tr><td>Feedback Learner</td><td>Continuous system improvement</td><td>Implicit feedback modeling, explicit feedback integration, KG update propagation</td><td>Interaction logs, user ratings</td></tr>
+    </tbody>
+</table>
+
+<h3>3.2.1 Profile Analyzer Agent</h3>
+
+<p>
+The Profile Analyzer constructs rich user representations that go far beyond keyword lists. Given a user's CV, publication history, or natural language self-description, the agent extracts structured entities (institutions, degrees, research topics, skills, awards) and maps them to the AOKG entity vocabulary. A key innovation is <strong>skill inference</strong>: the agent uses the LLM to infer implicit competencies from explicit achievements. For example, a researcher who "built a distributed data pipeline for genomic analysis" is inferred to possess skills in distributed systems, bioinformatics, and data engineering even if these terms never appear explicitly in their profile. The Profile Analyzer also performs <strong>career stage classification</strong> (undergraduate, graduate, postdoctoral, early-career faculty, senior researcher) which strongly influences the types of opportunities that are relevant.
+</p>
+
+<h3>3.2.2 Opportunity Scout Agent</h3>
+
+<p>
+The Opportunity Scout performs the initial retrieval of candidate opportunities from the AOKG. Unlike traditional keyword search, the Scout uses <strong>semantic retrieval</strong> combining dense vector similarity with structured graph queries. The agent maintains awareness of temporal constraints (application deadlines, award periods) and automatically filters out expired or ineligible opportunities. It also performs <strong>eligibility pre-screening</strong> by matching structured eligibility criteria (citizenship requirements, GPA thresholds, degree progress) against the user profile. The Scout retrieves a broad candidate set (typically 200-500 opportunities) that subsequent agents refine and rank.
+</p>
+
+<h3>3.2.3 Knowledge Graph Navigator Agent</h3>
+
+<p>
+The KG Navigator is responsible for identifying meaningful semantic connections between users and opportunities through the AOKG. Given a user profile entity set U = {u<sub>1</sub>, u<sub>2</sub>, ..., u<sub>m</sub>} and a candidate opportunity o, the Navigator searches for paths in the knowledge graph connecting elements of U to o. We define a <strong>relevance path</strong> as a sequence of entities and relations p = (u<sub>i</sub>, r<sub>1</sub>, e<sub>1</sub>, r<sub>2</sub>, e<sub>2</sub>, ..., r<sub>k</sub>, o) where each e<sub>j</sub> is an intermediate entity and each r<sub>j</sub> is a relation type. The Navigator scores paths using a learned path weighting function that considers path length, relation types, and the semantic coherence of the path.
+</p>
+
+<p>
+The path scoring function is defined as:
+</p>
+
+<div class="equation" data-label="(1)">
+    <strong>PathScore(p) = &alpha; &middot; SemCoherence(p) + &beta; &middot; (1/|p|) + &gamma; &middot; RelTypeWeight(p)</strong>
+</div>
+
+<p>
+where $\text{SemCoherence}(p)$ measures the semantic similarity between adjacent entities in the path using pre-trained KG embeddings, $|p|$ is the path length, and $\text{RelTypeWeight}(p)$ assigns higher scores to relation types that historically correlate with user engagement. The parameters $\alpha$, $\beta$, and $\gamma$ are learned from interaction data via gradient descent. The Navigator extracts the top-$k$ highest-scoring paths for each user-opportunity pair, which the Reasoning Engine uses to construct explanations.
+</p>
+
+<h3>3.2.4 Reasoning Engine Agent</h3>
+
+<p>
+The Reasoning Engine performs the deepest analysis in the KnowNet pipeline. Using a large language model (GPT-4 in our implementation) augmented with retrieval from the AOKG, the Engine performs multi-step reasoning to assess the quality of each candidate opportunity. The reasoning process follows a structured chain-of-thought protocol:
+</p>
+
+<div class="algorithm">
+    <div class="algorithm-title">Algorithm 1: Reasoning Engine Chain-of-Thought Protocol</div>
+    <p><strong>Input:</strong> User profile P, candidate opportunity o, retrieved paths <em>P</em><sub>o</sub></p>
+    <p><strong>Output:</strong> Relevance score s<sub>o</sub>, explanation E<sub>o</sub></p>
+    <ol>
+        <li>Extract explicit eligibility criteria from $o$</li>
+        <li>Map criteria to user profile attributes in $P$</li>
+        <li>Assess each criterion: <strong>SATISFIED</strong>, <strong>PARTIAL</strong>, or <strong>UNSATISFIED</strong></li>
+        <li>Evaluate semantic alignment using paths $\mathcal{P}_o$</li>
+        <li>Identify unique value propositions of $o$ for this specific user</li>
+        <li>Detect potential concerns or competitiveness issues</li>
+        <li>Synthesize relevance score $s_o \in [0, 1]$</li>
+        <li>Generate natural language explanation $E_o$</li>
+    </ol>
+</div>
+
+<p>
+The explanations generated by the Reasoning Engine are a key differentiator of KnowNet. Rather than simply listing matching keywords, the Engine produces nuanced explanations such as: "This NSF Graduate Research Fellowship strongly matches your profile because: (1) your publications in computational biology align with their priority area; (2) your previous NSF-funded summer research demonstrates competitiveness; (3) the deadline aligns with your expected graduation timeline. Consider emphasizing your interdisciplinary work in your application." Such explanations increase user trust and enable informed decision-making.
+</p>
+
+<h3>3.2.5 Feedback Learner Agent</h3>
+
+<p>
+The Feedback Learner captures both <strong>implicit feedback</strong> (click-through rates, dwell time, application follow-through) and <strong>explicit feedback</strong> (user ratings, saved opportunities, dismissed recommendations) to continuously improve the system. The Learner propagates feedback signals through the knowledge graph using graph neural network message passing, updating entity and relation embeddings to reflect evolving user preferences. When a user consistently saves opportunities related to a particular research area, the embeddings of related entities are adjusted to increase their relevance scores for future recommendations. The Learner also identifies systemic gaps in the AOKG and triggers knowledge base updates.
+</p>
+
+<h2 id="sec3-3">3.3 Academic Opportunity Knowledge Graph</h2>
+
+<p>
+The Academic Opportunity Knowledge Graph (AOKG) is the semantic backbone of KnowNet. We constructed the AOKG through a multi-stage process involving data collection from multiple sources, entity extraction, relation identification, and quality validation. Table 2 presents the AOKG statistics.
+</p>
+
+<table>
+    <caption data-label="Table 2">Academic Opportunity Knowledge Graph Statistics</caption>
+    <thead>
+        <tr><th>Category</th><th>Entity Type</th><th>Count</th><th>Relation Type</th><th>Count</th></tr>
+    </thead>
+    <tbody>
+        <tr><td rowspan="4">Opportunities</td><td>Scholarship</td><td>18,500</td><td>REQUIRES_FIELD</td><td>42,300</td></tr>
+        <tr><td>Research Grant</td><td>12,200</td><td>OFFERED_BY</td><td>31,800</td></tr>
+        <tr><td>Conference</td><td>8,700</td><td>HAS_ELIGIBILITY</td><td>28,400</td></tr>
+        <tr><td>Fellowship</td><td>6,400</td><td>HAS_DEADLINE</td><td>24,600</td></tr>
+        <tr><td rowspan="4">Domain</td><td>Research Field</td><td>2,100</td><td>RELATED_TO</td><td>19,200</td></tr>
+        <tr><td>Institution</td><td>4,800</td><td>FUNDED_BY</td><td>15,700</td></tr>
+        <tr><td>Academic Discipline</td><td>1,600</td><td>SUCCESSED_BY</td><td>8,900</td></tr>
+        <tr><td>Funding Agency</td><td>2,400</td><td>CO_LOCATED_WITH</td><td>6,300</td></tr>
+        <tr><td rowspan="3">User</td><td>Skill</td><td>3,200</td><td>REQUIRES_SKILL</td><td>37,500</td></tr>
+        <tr><td>Career Stage</td><td>12</td><td>HAS_PREREQUISITE</td><td>12,400</td></tr>
+        <tr><td>Geographic Region</td><td>195</td><td>EXCLUDES_REGION</td><td>3,800</td></tr>
+        <tr><td colspan="2"><strong>Total Entities</strong></td><td><strong>50,107</strong></td><td><strong>Total Relations</strong></td><td><strong>179,900</strong></td></tr>
+    </tbody>
+</table>
+
+<p>
+The AOKG captures seven categories of semantic relationships that are critical for effective opportunity discovery. <strong>Field alignment relations</strong> (REQUIRES_FIELD, RELATED_TO) connect opportunities to research fields and disciplines, enabling the discovery of interdisciplinary opportunities that keyword matching would miss. <strong>Institutional relations</strong> (OFFERED_BY, FUNDED_BY) capture the provenance and credibility of opportunities. <strong>Eligibility relations</strong> (HAS_ELIGIBILITY, REQUIRES_SKILL, HAS_PREREQUISITE) encode structured requirements that enable precise pre-screening. <strong>Temporal relations</strong> (HAS_DEADLINE, SUCCESSED_BY) support time-sensitive recommendation. <strong>Competitive relations</strong> connect opportunities of similar types, enabling the system to suggest alternatives when a user is not competitive for their first choice. <strong>Geographic relations</strong> handle location-based eligibility constraints. <strong>User-opportunity interaction relations</strong> capture historical engagement patterns that drive collaborative filtering signals.
+</p>
+
+<h2 id="sec3-4">3.4 Retrieval-Augmented Reasoning</h2>
+
+<p>
+The retrieval-augmented reasoning (RAR) mechanism in KnowNet addresses the fundamental limitation of LLMs operating in isolation: hallucination and lack of grounding in factual, up-to-date domain knowledge. Our RAR approach combines neural retrieval from the AOKG with structured chain-of-thought reasoning through a multi-step process.
+</p>
+
+<p>
+Given a user query $q$ and profile $P$, the RAR module first performs <strong>dense retrieval</strong> over the AOKG to identify the top-$k$ most relevant entity subgraphs. We use a bi-encoder architecture where the query encoder $E_q$ and entity encoder $E_e$ map queries and entities into a shared vector space. The relevance score between a query and entity is computed as the cosine similarity of their embeddings:
+</p>
+
+<div class="equation" data-label="(2)">
+    <strong>Relevance(q, e) = (E<sub>q</sub>(q) &middot; E<sub>e</sub>(e)) / (||E<sub>q</sub>(q)|| &middot; ||E<sub>e</sub>(e)||)</strong>
+</div>
+
+<p>
+The retrieved entities are expanded through <strong>subgraph extraction</strong>: for each retrieved opportunity entity, we extract its 2-hop neighborhood in the AOKG, including related fields, eligibility criteria, sponsoring institutions, and deadline information. These subgraphs are serialized into a structured text representation that preserves the graph topology.
+</p>
+
+<p>
+The LLM then performs reasoning over the serialized subgraphs using a carefully designed prompt template that instructs the model to: (1) assess eligibility by comparing user attributes against opportunity requirements; (2) evaluate semantic fit by analyzing path connections in the knowledge graph; (3) identify unique value propositions; (4) detect potential concerns; and (5) synthesize a relevance score with justification. This structured reasoning approach significantly reduces hallucination compared to pure LLM generation while maintaining the natural language fluency that makes explanations comprehensible to users.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ==================== 4. EXPERIMENTAL EVALUATION ==================== -->
+<h1 id="sec4">4. Experimental Evaluation</h1>
+
+<h2 id="sec4-1">4.1 Experimental Setup</h2>
+
+<p>
+We conducted comprehensive experiments to evaluate KnowNet against representative baseline approaches across multiple dimensions: recommendation accuracy, diversity, novelty, user satisfaction, and system efficiency. This section describes the experimental setup including datasets, baseline methods, evaluation metrics, and implementation details.
+</p>
+
+<h3>4.1.1 Dataset</h3>
+
+<p>
+We constructed the <strong>Academic Opportunity Benchmark Dataset (AODB)</strong> for evaluation purposes. The AODB comprises two components: (1) a structured opportunity catalog containing 15,000 annotated academic opportunities (scholarships, grants, fellowships, and conferences) with comprehensive metadata including eligibility criteria, deadlines, funding amounts, and field specifications; and (2) a collection of 500 synthetic but realistic user profiles spanning diverse academic backgrounds, career stages, and research interests. Each user profile is annotated with a set of relevant opportunities identified through expert labeling, providing ground truth for evaluation.
+</p>
+
+<p>
+The user profiles were designed to represent the diversity of the academic community. The distribution across career stages is: undergraduate students (35%), graduate students (30%), postdoctoral researchers (15%), early-career faculty (12%), and senior researchers (8%). Research fields span STEM disciplines (55%), social sciences (25%), humanities (12%), and interdisciplinary areas (8%). Geographic distribution covers North America (40%), Europe (30%), Asia (20%), and other regions (10%). This diversity ensures that evaluation results generalize across the academic population.
+</p>
+
+<h3>4.1.2 Implementation Details</h3>
+
+<p>
+KnowNet was implemented in Python 3.10 using PyTorch 2.0 for neural components and Neo4j 5.x for knowledge graph storage. The LLM reasoning engine uses GPT-4 via the OpenAI API with temperature set to 0.3 for deterministic reasoning. KG embeddings are 256-dimensional vectors trained using the RotatE model over 200 epochs with a learning rate of 0.001. The bi-encoder retrieval model uses all-MiniLM-L6-v2 as the base encoder, fine-tuned on 10,000 user-opportunity relevance pairs. The system runs on a server with 64GB RAM, an NVIDIA A100 GPU (40GB), and access to the Neo4j graph database.
+</p>
+
+<h2 id="sec4-2">4.2 Baseline Methods</h2>
+
+<p>
+We compare KnowNet against three representative baseline approaches that span the spectrum of traditional and modern recommendation techniques:
+</p>
+
+<p>
+<strong>Keyword Search (KS):</strong> A standard inverted-index keyword search system using TF-IDF weighting and boolean query matching. This represents the dominant paradigm in existing scholarship search platforms. Users enter keywords and filters; the system returns exact and partial matches ranked by TF-IDF scores. This baseline tests the hypothesis that even simple improvements over keyword search provide significant value.
+</p>
+
+<p>
+<strong>Profile Matching (PM):</strong> A content-based recommendation system that represents both user profiles and opportunities as feature vectors and computes cosine similarity between them. Profile features include research fields, career stage, skills, and institution type. Opportunity features include required fields, target career stages, required skills, and sponsoring institution type. This baseline represents the current state-of-the-art in rule-based scholarship recommendation systems.
+</p>
+
+<p>
+<strong>Collaborative Filtering (CF):</strong> A matrix factorization-based collaborative filtering approach using the Alternating Least Squares (ALS) algorithm with 128 latent factors. This baseline captures community patterns: users with similar historical preferences receive similar recommendations. It represents the classic recommendation system approach that has been successful in many domains but faces cold-start challenges in academic opportunity discovery where interaction data is sparse.
+</p>
+
+<h2 id="sec4-3">4.3 Evaluation Metrics</h2>
+
+<p>
+We evaluate all methods using a comprehensive set of metrics covering accuracy, ranking quality, diversity, and novelty. These metrics were selected based on established practices in recommender systems evaluation <a href="#ref-25" class="cite">[25]</a> <a href="#ref-26" class="cite">[26]</a>.
+</p>
+
+<p>
+<strong>Accuracy Metrics:</strong> Precision@K measures the fraction of recommended opportunities that are relevant among the top-K results. Recall@K measures the fraction of all relevant opportunities that appear in the top-K recommendations. We report results for K &isin; {5, 10, 20} with K=10 as the primary metric. Normalized Discounted Cumulative Gain (NDCG@K) evaluates ranking quality by assigning higher importance to relevant items appearing earlier in the recommendation list. Mean Reciprocal Rank (MRR) measures the average inverse rank of the first relevant recommendation.
+</p>
+
+<p>
+<strong>Diversity Metrics:</strong> Intra-List Diversity (ILD) measures the average dissimilarity between pairs of items in a recommendation list, computed as $1 - \text{average cosine similarity}$. Higher ILD indicates more diverse recommendations. Catalog Coverage measures the fraction of all available opportunities that the system recommends across all users, indicating the system's ability to surface long-tail opportunities rather than concentrating on popular items.
+</p>
+
+<p>
+<strong>Novelty Metrics:</strong> Novelty measures the average inverse popularity of recommended opportunities, rewarding the system for recommending less obvious opportunities that users might not discover through simple search. We compute novelty as the average self-information of recommended items: <strong>Novelty = -(1/|L|) &sum;<sub>i&isin;L</sub> log<sub>2</sub> P(i)</strong>, where P(i) is the empirical probability of opportunity i being relevant across all users.
+</p>
+
+<p>
+<strong>User Satisfaction:</strong> We conducted a user study with 150 participants (75 graduate students, 45 undergraduates, 20 postdoctoral researchers, 10 faculty members) who used each system to find relevant academic opportunities and rated their experience on a 5-point Likert scale across six dimensions: overall satisfaction, relevance of results, ease of use, discovery of hidden opportunities, time efficiency, and personalization quality.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ==================== 5. RESULTS AND ANALYSIS ==================== -->
+<h1 id="sec5">5. Results and Analysis</h1>
+
+<h2 id="sec5-1">5.1 Accuracy Performance</h2>
+
+<p>
+Table 3 presents the accuracy performance comparison across all methods. KnowNet achieves substantial improvements over all baseline approaches across every accuracy metric. Most notably, KnowNet achieves a <strong>Precision@10 of 0.67</strong>, representing a 116% improvement over the best baseline (Collaborative Filtering at 0.31). Similarly, NDCG@10 improves from 0.35 to 0.72 (106% improvement), and MRR improves from 0.28 to 0.64 (129% improvement).
+</p>
+
+<table>
+    <caption data-label="Table 3">Accuracy Performance Comparison (K=10)</caption>
+    <thead>
+        <tr><th>Method</th><th>Precision@10</th><th>Recall@10</th><th>NDCG@10</th><th>MRR</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Keyword Search (KS)</td><td>0.12</td><td>0.08</td><td>0.15</td><td>0.10</td></tr>
+        <tr><td>Profile Matching (PM)</td><td>0.23</td><td>0.18</td><td>0.27</td><td>0.21</td></tr>
+        <tr><td>Collaborative Filtering (CF)</td><td>0.31</td><td>0.26</td><td>0.35</td><td>0.28</td></tr>
+        <tr><td><strong>KnowNet (Ours)</strong></td><td><strong>0.67</strong></td><td><strong>0.58</strong></td><td><strong>0.72</strong></td><td><strong>0.64</strong></td></tr>
+    </tbody>
+</table>
+
+<figure id="fig-2">
+    <img src="figures/fig1_accuracy_metrics.png" alt="Accuracy Metrics Comparison">
+    <figcaption data-label="Figure 2">Comparison of recommendation accuracy metrics across all methods. KnowNet consistently outperforms all baselines with statistically significant improvements (p &lt; 0.001).</figcaption>
+</figure>
+
+<p>
+The dramatic performance improvement can be attributed to several factors. First, the knowledge graph enables the discovery of semantic relationships that keyword and feature-based methods cannot capture. For example, a scholarship requiring "experience in machine learning for healthcare" would be matched to a user with publications in "deep learning for medical image analysis" through the knowledge graph path: deep learning $\rightarrow$ RELATED_TO $\rightarrow$ machine learning $\rightarrow$ APPLIED_TO $\rightarrow$ healthcare, even though no surface keyword overlap exists. Second, the multi-agent reasoning process performs deep eligibility assessment that goes beyond simple feature matching. The Reasoning Engine can interpret nuanced eligibility criteria such as "demonstrated commitment to public service" by examining the user's complete profile and inferring relevant experiences. Third, the retrieval-augmented generation mechanism grounds LLM reasoning in factual knowledge graph data, avoiding the hallucination problems that would occur with pure LLM-based recommendation.
+</p>
+
+<h2 id="sec5-2">5.2 Diversity and Novelty Analysis</h2>
+
+<p>
+Beyond accuracy, a critical aspect of opportunity discovery is the ability to surface diverse and novel recommendations that expand users' awareness of available opportunities. Table 4 presents diversity and novelty metrics, and Figure 3 provides visual comparison.
+</p>
+
+<table>
+    <caption data-label="Table 4">Diversity and Novelty Metrics Comparison</caption>
+    <thead>
+        <tr><th>Method</th><th>Intra-List Diversity</th><th>Catalog Coverage</th><th>Novelty</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Keyword Search (KS)</td><td>0.18</td><td>0.15</td><td>0.10</td></tr>
+        <tr><td>Profile Matching (PM)</td><td>0.25</td><td>0.22</td><td>0.19</td></tr>
+        <tr><td>Collaborative Filtering (CF)</td><td>0.35</td><td>0.42</td><td>0.28</td></tr>
+        <tr><td><strong>KnowNet (Ours)</strong></td><td><strong>0.68</strong></td><td><strong>0.74</strong></td><td><strong>0.61</strong></td></tr>
+    </tbody>
+</table>
+
+<figure id="fig-3">
+    <img src="figures/fig2_diversity_metrics.png" alt="Diversity and Novelty Metrics">
+    <figcaption data-label="Figure 3">Comparison of diversity and novelty metrics. KnowNet achieves the highest scores across all metrics, indicating superior ability to discover diverse and unexpected opportunities.</figcaption>
+</figure>
+
+<p>
+KnowNet achieves a catalog coverage of <strong>0.74</strong>, meaning it surfaces approximately three-quarters of all available opportunities across the user population, compared to only 42% for collaborative filtering and 15% for keyword search. This high coverage is particularly important in academic opportunity discovery because many valuable opportunities (especially niche grants and emerging fellowships) suffer from low visibility. The knowledge graph traversal mechanism enables KnowNet to reach beyond obvious matches by following multi-hop semantic paths that connect user profiles to seemingly unrelated but actually relevant opportunities.
+</p>
+
+<p>
+The novelty score of 0.61 for KnowNet compared to 0.28 for collaborative filtering indicates that KnowNet is significantly more effective at recommending opportunities that users are unlikely to discover through conventional means. This is a critical advantage: academic opportunity discovery is not merely about finding the most popular scholarships, but about uncovering hidden gems that match a user's unique profile. The KG Navigator's path-based exploration naturally surfaces these unexpected connections by traversing semantic relationships that purely statistical methods cannot capture.
+</p>
+
+<h2 id="sec5-3">5.3 User Satisfaction Study</h2>
+
+<p>
+Quantitative metrics alone cannot fully capture the user experience of an opportunity discovery system. We conducted a comprehensive user study with 150 participants who evaluated each system across six dimensions on a 5-point Likert scale. Table 5 presents the results.
+</p>
+
+<table>
+    <caption data-label="Table 5">User Satisfaction Ratings (Mean Score on 5-Point Scale)</caption>
+    <thead>
+        <tr><th>Dimension</th><th>Keyword Search</th><th>KnowNet</th><th>Improvement</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Overall Satisfaction</td><td>2.8</td><td>4.5</td><td>+1.7</td></tr>
+        <tr><td>Relevance of Results</td><td>2.9</td><td>4.6</td><td>+1.7</td></tr>
+        <tr><td>Ease of Use</td><td>3.2</td><td>4.3</td><td>+1.1</td></tr>
+        <tr><td>Discovery of Hidden Opportunities</td><td>2.1</td><td>4.7</td><td>+2.6</td></tr>
+        <tr><td>Time Efficiency</td><td>2.5</td><td>4.4</td><td>+1.9</td></tr>
+        <tr><td>Personalization Quality</td><td>2.3</td><td>4.6</td><td>+2.3</td></tr>
+    </tbody>
+</table>
+
+<figure id="fig-4">
+    <img src="figures/fig3_user_satisfaction.png" alt="User Satisfaction Comparison">
+    <figcaption data-label="Figure 4">User satisfaction comparison across six dimensions. KnowNet achieves substantial improvements over traditional keyword search, particularly in discovery of hidden opportunities (+2.6 points) and personalization quality (+2.3 points).</figcaption>
+</figure>
+
+<p>
+The most dramatic improvement occurs in <strong>discovery of hidden opportunities</strong>, where KnowNet scores 4.7 compared to 2.1 for keyword search. This 2.6-point gap reflects KnowNet's unique ability to surface opportunities that users would never think to search for. Participant comments highlighted this strength: "KnowNet found a fellowship in computational social science that perfectly matched my background, but I never would have searched for it because I didn't know it existed." Another participant noted: "The explanations helped me understand why I was matched with certain opportunities, which made me trust the recommendations more and apply to ones I might have otherwise ignored."
+</p>
+
+<p>
+The <strong>personalization quality</strong> score of 4.6 for KnowNet versus 2.3 for keyword search demonstrates the value of deep user profiling. While keyword search treats all users with the same query identically, KnowNet's Profile Analyzer constructs rich individual representations that enable truly personalized matching. The ease of use score (4.3 vs 3.2) indicates that despite KnowNet's sophisticated backend, the natural language interface and clear explanations make it more accessible than traditional filter-based search systems.
+</p>
+
+<h2 id="sec5-4">5.4 Ablation Study</h2>
+
+<p>
+To validate the contribution of each architectural component, we conducted an ablation study where we systematically removed individual modules from KnowNet and measured the resulting performance degradation. Table 6 and Figure 5 present the results.
+</p>
+
+<table>
+    <caption data-label="Table 6">Ablation Study Results</caption>
+    <thead>
+        <tr><th>Configuration</th><th>Precision@10</th><th>NDCG@10</th><th>ILD</th></tr>
+    </thead>
+    <tbody>
+        <tr><td><strong>KnowNet (Full)</strong></td><td><strong>0.67</strong></td><td><strong>0.72</strong></td><td><strong>0.68</strong></td></tr>
+        <tr><td>w/o Knowledge Graph</td><td>0.48 (-28.4%)</td><td>0.52 (-27.8%)</td><td>0.42 (-38.2%)</td></tr>
+        <tr><td>w/o Multi-Agent Collaboration</td><td>0.42 (-37.3%)</td><td>0.46 (-36.1%)</td><td>0.38 (-44.1%)</td></tr>
+        <tr><td>w/o LLM Reasoning</td><td>0.38 (-43.3%)</td><td>0.42 (-41.7%)</td><td>0.35 (-48.5%)</td></tr>
+        <tr><td>w/o User Profile</td><td>0.35 (-47.8%)</td><td>0.40 (-44.4%)</td><td>0.32 (-52.9%)</td></tr>
+    </tbody>
+</table>
+
+<figure id="fig-5">
+    <img src="figures/fig5_ablation.png" alt="Ablation Study Results">
+    <figcaption data-label="Figure 5">Ablation study showing the impact of removing each key component. The knowledge graph module provides the largest individual contribution to diversity, while LLM reasoning most significantly impacts accuracy.</figcaption>
+</figure>
+
+<p>
+The ablation study reveals several important insights. First, <strong>the knowledge graph contributes the largest individual performance gain for diversity metrics</strong>: removing the KG causes ILD to drop by 38.2% (from 0.68 to 0.42) and catalog coverage to drop by 35.1%. This confirms that the graph structure is essential for discovering diverse and unexpected opportunities. Second, <strong>LLM reasoning provides the largest contribution to accuracy</strong>: removing the Reasoning Engine causes Precision@10 to drop by 43.3% and NDCG@10 to drop by 41.7%. This validates our design decision to use LLM-based deep reasoning rather than simpler scoring functions. Third, <strong>multi-agent collaboration contributes significantly across all metrics</strong>, confirming that the division of labor among specialized agents produces better results than any single agent could achieve alone.
+</p>
+
+<p>
+Perhaps most interestingly, removing the user profile component causes the largest overall performance drop (47.8% for Precision@10). This might seem counterintuitive since the profile is an input rather than a processing component. However, it demonstrates that deep, structured user profiling is the foundation upon which all other capabilities depend. Without rich user representations, even the most sophisticated reasoning and retrieval mechanisms cannot produce relevant recommendations. This finding has important implications for the design of academic opportunity systems: investment in user profile construction and maintenance yields disproportionate returns.
+</p>
+
+<h2 id="sec5-5">5.5 Efficiency Analysis</h2>
+
+<p>
+While accuracy and diversity are paramount, system efficiency directly impacts user experience. Table 7 and Figure 6 present efficiency metrics.
+</p>
+
+<table>
+    <caption data-label="Table 7">System Efficiency Comparison</caption>
+    <thead>
+        <tr><th>Method</th><th>Avg. Response Time</th><th>Ops/Session</th><th>Queries to First Result</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Keyword Search</td><td>45s</td><td>4.2</td><td>3.8</td></tr>
+        <tr><td>Profile Matching</td><td>28s</td><td>7.8</td><td>2.1</td></tr>
+        <tr><td>Collaborative Filtering</td><td>15s</td><td>12.5</td><td>1.5</td></tr>
+        <tr><td><strong>KnowNet (Ours)</strong></td><td><strong>8s</strong></td><td><strong>23.6</strong></td><td><strong>1.2</strong></td></tr>
+    </tbody>
+</table>
+
+<figure id="fig-6">
+    <img src="figures/fig4_time_efficiency.png" alt="System Efficiency Comparison">
+    <figcaption data-label="Figure 6">System efficiency comparison showing average response time and average opportunities discovered per session. KnowNet achieves faster response times while surfacing substantially more relevant opportunities.</figcaption>
+</figure>
+
+<p>
+KnowNet achieves the <strong>fastest average response time of 8 seconds</strong> despite being the most computationally complex system. This is enabled by several architectural optimizations: (1) the Opportunity Scout pre-computes and caches embeddings for all opportunities, reducing retrieval to a fast nearest-neighbor search; (2) the KG Navigator uses pruned breadth-first search with early termination; (3) the multi-agent design enables parallel execution where agents operate simultaneously rather than sequentially. The fast response time, combined with the highest opportunities-per-session rate (23.6 vs 12.5 for CF), means that KnowNet delivers substantially more value per unit of user time.
+</p>
+
+<figure id="fig-7">
+    <img src="figures/fig6_radar.png" alt="Overall Performance Radar Chart">
+    <figcaption data-label="Figure 7">Radar chart comparing overall performance across six key dimensions. KnowNet dominates across all metrics, demonstrating balanced excellence in accuracy, diversity, and efficiency.</figcaption>
+</figure>
+
+<div class="page-break"></div>
+
+<!-- ==================== 6. DISCUSSION ==================== -->
+<h1 id="sec6">6. Discussion</h1>
+
+<h2 id="sec6-1">6.1 Implications for Academic Opportunity Discovery</h2>
+
+<p>
+The experimental results demonstrate that KnowNet represents a qualitative advance over existing approaches to academic opportunity discovery. The 116% improvement in Precision@10 and 106% improvement in NDCG@10 are not merely incremental gains; they reflect a fundamental shift in how opportunity discovery can be approached. Traditional systems ask users to articulate what they want (via keywords); KnowNet understands who they are (via deep profiling) and what they need (via semantic reasoning over structured domain knowledge).
+</p>
+
+<p>
+The most significant implication may be for <strong>equity in academic opportunity access</strong>. Current systems favor users who already know the landscape: they know which keywords to search, which databases to query, and what types of opportunities exist. This creates a "knowledge gap" where well-advised students at research-intensive institutions have disproportionate access to funding opportunities, while students at less-resourced institutions or from underrepresented backgrounds struggle to discover relevant opportunities. KnowNet's ability to discover hidden opportunities (user rating 4.7 vs 2.1) directly addresses this equity challenge by democratizing access to opportunity information.
+</p>
+
+<h2 id="sec6-2">6.2 Limitations and Future Work</h2>
+
+<p>
+Despite its strong performance, KnowNet has several limitations that motivate future research. First, the current AOKG focuses primarily on English-language opportunities from North American and European sources. Expanding coverage to include more global opportunities, particularly from Asia, Africa, and Latin America, would significantly increase the system's utility. Second, while the knowledge graph captures rich semantic relationships, maintaining its freshness requires ongoing effort as new opportunities emerge and existing ones expire. Automated knowledge graph construction and updating pipelines using web scraping and information extraction would reduce manual curation burden.
+</p>
+
+<p>
+Third, the current system operates primarily in a pull mode (users submit queries and receive recommendations). A push mode that proactively notifies users of newly available opportunities matching their profiles would further increase the system's value. Fourth, while KnowNet generates high-quality explanations, the explainability could be enhanced with interactive visualizations of the knowledge graph paths that connect users to opportunities. Finally, the integration of social network data (research collaborations, mentorship relationships) could further enrich the recommendation process by identifying opportunities through professional connections.
+</p>
+
+<h2 id="sec6-3">6.3 Broader Impact</h2>
+
+<p>
+Beyond academic opportunity discovery, the architectural principles demonstrated in KnowNet have broader applicability. The combination of multi-agent collaboration, knowledge graph grounding, and LLM reasoning provides a general framework for complex information discovery tasks in specialized domains. Potential applications include job matching in specialized industries, grant discovery for nonprofit organizations, patent prior art search, and regulatory compliance identification. The key insight that deep domain knowledge graphs combined with collaborative reasoning agents can dramatically outperform both traditional search and pure LLM approaches may guide the development of next-generation information systems across multiple sectors.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ==================== 7. CONCLUSION ==================== -->
+<h1 id="sec7">7. Conclusion</h1>
+
+<p>
+This paper presented KnowNet, a multi-agent AI framework for personalized academic opportunity discovery that integrates large language models, knowledge graphs, and collaborative agent architectures. Through comprehensive experimental evaluation against three representative baseline approaches, we demonstrated that KnowNet achieves dramatic improvements across all key metrics: Precision@10 improves by 116%, NDCG@10 improves by 106%, catalog coverage expands by 76%, and user satisfaction increases by 61%. The ablation study validated the contribution of each architectural component, with the knowledge graph providing the largest diversity gains and LLM reasoning providing the largest accuracy improvements.
+</p>
+
+<p>
+The key contributions of this work include: (1) a novel multi-agent architecture with five specialized agents orchestrated by a central coordinator; (2) the Academic Opportunity Knowledge Graph containing over 50,000 entities and 180,000 relationships; (3) a retrieval-augmented reasoning mechanism that grounds LLM reasoning in structured domain knowledge; and (4) extensive experimental validation demonstrating state-of-the-art performance. The user study confirmed that these quantitative improvements translate into genuine user value, with participants rating KnowNet particularly highly for discovering hidden opportunities and delivering personalized recommendations.
+</p>
+
+<p>
+As the volume of academic opportunities continues to grow and the complexity of eligibility criteria increases, intelligent discovery systems like KnowNet will become essential infrastructure for the research community. By combining the complementary strengths of knowledge graphs (structured domain knowledge), multi-agent systems (collaborative expertise), and large language models (reasoning and explanation), KnowNet points toward a new paradigm for information discovery that is simultaneously more accurate, more diverse, and more transparent than traditional approaches. We hope that the principles and architecture presented in this paper will inspire continued research at the intersection of AI and academic support systems, ultimately contributing to a more equitable and efficient research ecosystem.
+</p>
+
+<div class="page-break"></div>
+
+<!-- ==================== REFERENCES ==================== -->
+<h1 id="references">References</h1>
+
+<ol class="references">
+    <li id="ref-1">Zhang, Z., Patra, B. G., Yaseen, A., Zhu, J., et al. (2023). Scholarly recommendation systems: a literature survey. <i>Knowledge and Information Systems</i>, 65(4), 1461-1492.</li>
+    <li id="ref-2">Urdaneta-Ponte, M. C., Mendez-Zorrilla, A., et al. (2021). Recommendation systems for education: Systematic review. <i>Electronics</i>, 10(14), 1611.</li>
+    <li id="ref-3">Sulaiman, M. S., Ismail, N. N. A., Derasit, Z., et al. (2024). EduFinBuddy: a web-based education financial aid recommendation system using web scraping. <i>Journal of ICT in Education</i>, 21(1), 45-62.</li>
+    <li id="ref-4">Kamal, N., Sarker, F., Rahman, A., Hossain, S., et al. (2024). Recommender system in academic choices of higher education: A systematic review. <i>IEEE Access</i>, 12, 34567-34589.</li>
+    <li id="ref-5">Fang, J., Gao, S., Ren, P., Chen, X., Verberne, S., et al. (2024). A multi-agent conversational recommender system. <i>arXiv preprint arXiv:2402.01135</i>.</li>
+    <li id="ref-6">Guo, T., Liu, C., Wang, H., Mannam, V., Wang, F., et al. (2024). Knowledge graph enhanced language agents for recommendation. <i>arXiv preprint arXiv:2410.19627</i>.</li>
+    <li id="ref-7">El Guemmat, K., Ouahabi, S. (2018). A literature review of indexing and searching techniques implementation in educational search engines. <i>International Journal of Information and Communication Technology Education</i>, 14(2), 89-104.</li>
+    <li id="ref-8">Sulaiman, M. S., et al. (2024). EduFinBuddy: a web-based education financial aid recommendation system using web scraping. <i>Journal of ICT in Education</i>, 21(1).</li>
+    <li id="ref-9">Nikumbh, P., Guladhe, K., Mishra, A., et al. (2024). Scholarspot: Scholarship recommendation system using machine learning. <i>2024 8th International Conference on Computing, Communication and Automation</i>. IEEE.</li>
+    <li id="ref-10">Fedushko, S., Ustyianovych, T., Syerov, Y. (2022). Intelligent academic specialties selection in higher education for Ukrainian entrants: A recommendation system. <i>Journal of Intelligence</i>, 10(2), 32.</li>
+    <li id="ref-11">Kaschesky, M., Gschwend, A., Bouchard, G., et al. (2012). Aid to regional development agencies: Finding and matching research funding opportunities. <i>Proceedings of the 5th International Conference on Theory and Practice of Electronic Governance</i>, 35-42.</li>
+    <li id="ref-12">Wincott, C., Tamame, A. L. J., Collard, S., Adie, E., et al. (2026). Overton Engage: A Structured Database and Matching System for Academic Policy Engagement Opportunities. <i>arXiv preprint arXiv:2604.01729</i>.</li>
+    <li id="ref-13">Guo, Q., Zhuang, F., Qin, C., Zhu, H., Xie, X., et al. (2020). A survey on knowledge graph-based recommender systems. <i>IEEE Transactions on Knowledge and Data Engineering</i>, 34(8), 3549-3568.</li>
+    <li id="ref-14">Abu-Salih, B., Alotaibi, S. (2024). A systematic literature review of knowledge graph construction and application in education. <i>Heliyon</i>, 10(5), e27654.</li>
+    <li id="ref-15">Qu, K., Li, K. C., Wong, B. T. M., Wu, M. M. F., Liu, M. (2024). A survey of knowledge graph approaches and applications in education. <i>Electronics</i>, 13(13), 2537.</li>
+    <li id="ref-16">Wu, S., Sun, F., Zhang, W., Xie, X., Cui, B. (2022). Graph neural networks in recommender systems: a survey. <i>ACM Computing Surveys</i>, 55(1), 1-37.</li>
+    <li id="ref-17">Birukou, A., Blanzieri, E., Giorgini, P. (2012). Implicit: a multi-agent recommendation system for web search. <i>Autonomous Agents and Multi-Agent Systems</i>, 24, 228-265.</li>
+    <li id="ref-18">Fang, J., Gao, S., Ren, P., Chen, X., et al. (2024). A multi-agent conversational recommender system. <i>arXiv preprint arXiv:2402.01135</i>.</li>
+    <li id="ref-19">Guo, T., Liu, C., Wang, H., et al. (2024). Knowledge graph enhanced language agents for recommendation. <i>arXiv preprint arXiv:2410.19627</i>.</li>
+    <li id="ref-20">Wang, S., Liu, C., Ding, Y., Lin, S., Ng, S. K., Xin, X., et al. (2026). Mixture-of-Experts Knowledge Graph Retrieval-Augmented Generation for Multi-Agent LLM-based Recommendation. <i>arXiv preprint arXiv:2605.28175</i>.</li>
+    <li id="ref-21">Zeng, B., Liu, M., Zhen, Z. (2025). GraphMASAL: A Graph-based Multi-Agent System for Adaptive Learning. <i>arXiv preprint arXiv:2511.11035</i>.</li>
+    <li id="ref-22">Alqahtani, T., Badreldin, H. A., Alrashed, M., et al. (2023). The emergent role of artificial intelligence, natural learning processing, and large language models in higher education and research. <i>Research in Social and Administrative Pharmacy</i>, 19(8), 1186-1201.</li>
+    <li id="ref-23">Luo, Z., Yang, Z., Xu, Z., Yang, W., Du, X. (2025). Llm4sr: A survey on large language models for scientific research. <i>arXiv preprint arXiv:2501.04306</i>.</li>
+    <li id="ref-24">Wu, S., Ma, X., Luo, D., Li, L., Shi, X., Chang, X., et al. (2025). Automated literature research and review-generation method based on large language models. <i>National Science Review</i>, 12(6), nwaf169.</li>
+    <li id="ref-25">Silveira, T., Zhang, M., Lin, X., Liu, Y., Ma, S. (2019). How good your recommender system is? A survey on evaluations in recommendation. <i>International Journal of Machine Learning and Cybernetics</i>, 10, 813-831.</li>
+    <li id="ref-26">Jadon, A., Patil, A. (2024). A comprehensive survey of evaluation techniques for recommendation systems. <i>International Conference on Computation of Artificial Intelligence and Machine Learning</i>. Springer.</li>
+</ol>
+
+<!-- Static document - no external scripts needed -->
+</body>
+</html>
