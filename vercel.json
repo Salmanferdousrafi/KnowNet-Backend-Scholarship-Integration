@@ -2,37 +2,29 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/app/main.py",
+      "src": "app/main.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
         "runtime": "python3.9"
-      }
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/dist"
       }
     }
   ],
   "routes": [
     {
       "src": "/api/v1/(.*)",
-      "dest": "backend/app/main.py"
+      "dest": "app/main.py"
     },
     {
       "src": "/health",
-      "dest": "backend/app/main.py"
-    },
-    {
-      "src": "/finder",
-      "dest": "frontend/public/finder.html"
+      "dest": "app/main.py"
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/dist/$1"
+      "dest": "app/main.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHONPATH": "."
+  }
 }
