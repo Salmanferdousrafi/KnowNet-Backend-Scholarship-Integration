@@ -164,3 +164,35 @@ Live Demo
 App: knownet-ai-x.vercel.app
 Source: github.com/Salmanferdousrafi/knownet-ai-X
 The live demo includes 6 pre-seeded scholarships. Hit POST /api/v1/scholarships/demo-seed to populate them.
+
+
+Implementation Checklist
+[x] Modular FastAPI structure (no monolithic files)
+[x] OAuth2PasswordBearer with real Bearer header
+[x] Resource ownership verification on all endpoints
+[x] Environment-only secrets with hard fail
+[x] Short-lived access tokens + revocable refresh tokens
+[x] Rate limiting on auth endpoints
+[x] Semantic knowledge search via embeddings
+[x] Scholarship model with structured metadata
+[x] APScheduler auto-collection every 30 min
+[x] AI matching algorithm (60/25/15 weights)
+[x] Admin-only manual trigger endpoint
+[x] Frontend ScholarshipFinderModule component
+[x] Demo seed endpoint for testing
+[x] Pinned requirements.txt
+ Could Not Verify / Known Gaps
+Real RSS feeds: SCHOLARSHIP_SOURCES uses placeholder URLs. Add actual scholarship RSS feeds.
+Embedding provider: Using deterministic fallback. Switch to Voyage AI for production.
+Frontend auth store: Assumes Zustand pattern. Adjust if your existing app uses Redux/Context.
+CORS domain: Update allow_origins in main.py to your exact Vercel URL.
+Email verification: Not implemented.
+Password reset: Not implemented.
+HTTPS enforcement: Add TrustedHostMiddleware for production.
+File uploads: Not covered if your existing app has them.
+Stack
+FastAPI · PostgreSQL (Supabase) · Claude API · SQLAlchemy · APScheduler · slowapi · React · Vite · Vercel
+
+
+
+Paste this into your GitHub wiki's **"Home"** page. The widget above shows how it renders visually. Want me to also create additional wiki pages (e.g., "API Reference", "Deployment Guide", "Security Audit")?
