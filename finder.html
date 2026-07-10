@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KnowNet X — AI Scholarship & University Finder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-zinc-900 to-slate-950 text-zinc-100">
+  <header class="border-b border-white/5 bg-white/[0.02] backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 via-violet-500 to-amber-500 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">KX</div>
+        <div>
+          <h1 class="font-bold text-zinc-100 tracking-tight text-sm">KnowNet X</h1>
+          <p class="text-xs text-zinc-500">AI Knowledge Intelligence + Opportunity Finder</p>
+        </div>
+      </div>
+      <nav class="flex items-center gap-1 text-sm overflow-x-auto">
+        <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn px-4 py-2 rounded-lg font-medium transition-all text-blue-400 bg-blue-500/10 whitespace-nowrap">My Profile</button>
+        <button onclick="switchTab('scholarships')" id="nav-scholarships" class="nav-btn px-4 py-2 rounded-lg font-medium transition-all text-zinc-400 hover:text-zinc-100 hover:bg-white/5 whitespace-nowrap">Scholarships</button>
+        <button onclick="switchTab('universities')" id="nav-universities" class="nav-btn px-4 py-2 rounded-lg font-medium transition-all text-zinc-400 hover:text-zinc-100 hover:bg-white/5 whitespace-nowrap">Universities</button>
+        <button onclick="switchTab('knowledge')" id="nav-knowledge" class="nav-btn px-4 py-2 rounded-lg font-medium transition-all text-zinc-400 hover:text-zinc-100 hover:bg-white/5 whitespace-nowrap">Knowledge</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8">
+    <div id="tab-profile" class="tab-content">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+          <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+            <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+              <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              Student Profile
+            </h2>
+            <p class="text-sm text-zinc-500 mb-6">Complete your profile to get AI-matched scholarships and universities.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Full Name</label><input type="text" id="p-name" placeholder="e.g., Alex Chen" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"></div>
+              <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Email</label><input type="email" id="p-email" placeholder="alex@university.edu" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"></div>
+              <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Field of Study</label><select id="p-field" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"><option value="">Select your field...</option><option value="computer_science">Computer Science</option><option value="engineering">Engineering</option><option value="medicine">Medicine</option><option value="business">Business / Finance</option><option value="physics">Physics</option><option value="artificial_intelligence">Artificial Intelligence</option><option value="data_science">Data Science</option><option value="all_fields">Undecided / All Fields</option></select></div>
+              <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Education Level</label><select id="p-level" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"><option value="">Select level...</option><option value="high_school">High School</option><option value="bachelor">Bachelor's</option><option value="master">Master's</option><option value="phd">PhD</option></select></div>
+              <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Country</label><select id="p-country" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"><option value="">Select country...</option><option value="US">United States</option><option value="UK">United Kingdom</option><option value="Canada">Canada</option><option value="Germany">Germany</option><option value="Australia">Australia</option><option value="Bangladesh">Bangladesh</option><option value="India">India</option><option value="global">Other / Global</option></select></div>
+              <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Graduation Year</label><input type="number" id="p-year" placeholder="2027" min="2024" max="2035" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"></div>
+              <div class="md:col-span-2"><label class="block text-xs font-medium text-zinc-400 mb-1.5">Bio / Academic Background</label><textarea id="p-bio" rows="4" placeholder="I am a computer science student passionate about AI and machine learning. I have experience with Python, TensorFlow, and have published a paper on NLP. Looking for fully funded master's opportunities in the US or Canada." class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all resize-none placeholder:text-zinc-600"></textarea></div>
+            </div>
+            <div class="mt-6 flex items-center gap-3">
+              <button onclick="saveProfile()" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white rounded-lg font-medium text-sm transition-all shadow-lg shadow-blue-500/20">Save Profile & Find Matches</button>
+              <span id="save-status" class="text-sm text-green-400 opacity-0 transition-opacity">Profile saved! AI matching active.</span>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-1">
+          <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-sm sticky top-24">
+            <h3 class="font-semibold text-zinc-100 mb-4">Profile Strength</h3>
+            <div class="w-full bg-white/5 rounded-full h-2 mb-2"><div id="strength-bar" class="bg-gradient-to-r from-blue-500 to-violet-500 h-2 rounded-full transition-all duration-500" style="width:0%"></div></div>
+            <p id="strength-text" class="text-xs text-zinc-500 mb-6">Complete your profile to unlock AI matching</p>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm"><span class="text-zinc-400">Matchable Scholarships</span><span id="stat-scholarships" class="font-bold text-amber-400">0</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-zinc-400">Matchable Universities</span><span id="stat-universities" class="font-bold text-blue-400">0</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-zinc-400">Top Match Score</span><span id="stat-score" class="font-bold text-violet-400">—</span></div>
+            </div>
+            <div class="mt-6 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+              <p class="text-xs text-zinc-400 leading-relaxed"><span class="text-blue-400 font-medium">How matching works:</span><br>60% semantic similarity (Claude AI reads your bio)<br>25% rule-based (field + country + education level)<br>15% deadline urgency (closer deadlines rank higher)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-scholarships" class="tab-content hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-zinc-100 flex items-center gap-2">
+            <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Scholarship & Internship Finder
+          </h2>
+          <p class="text-sm text-zinc-500 mt-1">AI-matched opportunities based on your profile</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="setScholarshipView('matches')" id="btn-matches" class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white">For You</button>
+          <button onclick="setScholarshipView('all')" id="btn-all" class="px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-zinc-400 hover:text-zinc-100 hover:bg-white/10 transition-all">Browse All</button>
+        </div>
+      </div>
+      <div id="scholarship-filters" class="hidden mb-4 flex flex-wrap gap-2">
+        <input type="text" id="sch-search" placeholder="Search..." oninput="renderAllScholarships()" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50 w-64">
+        <select id="sch-field" onchange="renderAllScholarships()" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50"><option value="">All Fields</option><option value="computer_science">Computer Science</option><option value="engineering">Engineering</option><option value="medicine">Medicine</option><option value="artificial_intelligence">AI / ML</option><option value="all_fields">All Fields</option></select>
+        <select id="sch-country" onchange="renderAllScholarships()" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:border-blue-500/50"><option value="">All Countries</option><option value="US">USA</option><option value="UK">UK</option><option value="Canada">Canada</option><option value="global">Global</option></select>
+      </div>
+      <div id="scholarships-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      <div id="no-scholarships" class="hidden text-center py-20">
+        <p class="text-zinc-500">Complete your profile to see AI-matched scholarships.</p>
+        <button onclick="switchTab('profile')" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">Go to Profile</button>
+      </div>
+    </div>
+
+    <div id="tab-universities" class="tab-content hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-zinc-100 flex items-center gap-2">
+          <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          University Finder
+        </h2>
+        <p class="text-sm text-zinc-500 mt-1">Discover universities that match your academic profile</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="md:col-span-1">
+          <div class="bg-white/[0.03] border border-white/10 rounded-xl p-4">
+            <h3 class="font-semibold text-sm mb-3">Filters</h3>
+            <div class="space-y-3">
+              <div><label class="text-xs text-zinc-500">Country</label><select id="uni-country" onchange="renderUniversities()" class="w-full mt-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm"><option value="">All</option><option value="US">USA</option><option value="UK">UK</option><option value="Canada">Canada</option><option value="Germany">Germany</option><option value="Australia">Australia</option></select></div>
+              <div><label class="text-xs text-zinc-500">Ranking Range</label><select id="uni-rank" onchange="renderUniversities()" class="w-full mt-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm"><option value="">Any</option><option value="top10">Top 10</option><option value="top50">Top 50</option><option value="top100">Top 100</option></select></div>
+              <div><label class="text-xs text-zinc-500">Tuition Budget</label><select id="uni-budget" onchange="renderUniversities()" class="w-full mt-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm"><option value="">Any</option><option value="low">Under $20k/year</option><option value="medium">$20k - $40k/year</option><option value="high">$40k+/year</option></select></div>
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-2"><div id="universities-list" class="space-y-3"></div></div>
+      </div>
+    </div>
+
+    <div id="tab-knowledge" class="tab-content hidden">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-zinc-100 flex items-center gap-2">
+          <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Knowledge Base
+        </h2>
+        <p class="text-sm text-zinc-500 mt-1">Semantic AI search across your knowledge entries</p>
+      </div>
+      <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 mb-6">
+        <div class="flex gap-3">
+          <div class="relative flex-1">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="knowledge-query" placeholder="Ask anything about your knowledge... e.g., 'machine learning frameworks'" class="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-zinc-600">
+          </div>
+          <button onclick="searchKnowledge()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-medium text-sm transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI Search
+          </button>
+        </div>
+      </div>
+      <div id="knowledge-results" class="space-y-3">
+        <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-colors">
+          <div class="flex items-start justify-between mb-2"><h3 class="font-semibold text-zinc-100">Transformer Architecture Deep Dive</h3><span class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full">AI / ML</span></div>
+          <p class="text-sm text-zinc-400 line-clamp-2 mb-3">The transformer architecture introduced in "Attention Is All You Need" revolutionized NLP by replacing recurrent layers with self-attention mechanisms...</p>
+          <div class="flex items-center gap-3 text-xs text-zinc-500"><span>Source: arXiv</span><span>•</span><span>Added 2 days ago</span><span>•</span><span class="text-emerald-400">Relevance: 94%</span></div>
+        </div>
+        <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-colors">
+          <div class="flex items-start justify-between mb-2"><h3 class="font-semibold text-zinc-100">Fulbright Application Guide 2026</h3><span class="text-xs text-amber-400 bg-amber-500/10 px-2 py-1 rounded-full">Scholarships</span></div>
+          <p class="text-sm text-zinc-400 line-clamp-2 mb-3">Complete walkthrough of the Fulbright Foreign Student Program application, including personal statement tips, recommendation letter strategy, and interview preparation...</p>
+          <div class="flex items-center gap-3 text-xs text-zinc-500"><span>Source: Fulbright Official</span><span>•</span><span>Added 1 week ago</span><span>•</span><span class="text-emerald-400">Relevance: 88%</span></div>
+        </div>
+        <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-colors">
+          <div class="flex items-start justify-between mb-2"><h3 class="font-semibold text-zinc-100">GRE Quantitative Reasoning Strategies</h3><span class="text-xs text-blue-400 bg-blue-500/10 px-2 py-1 rounded-full">Test Prep</span></div>
+          <p class="text-sm text-zinc-400 line-clamp-2 mb-3">Advanced strategies for the GRE quantitative section, including time management techniques, common trap questions, and calculator shortcuts for the on-screen tool...</p>
+          <div class="flex items-center gap-3 text-xs text-zinc-500"><span>Source: ETS</span><span>•</span><span>Added 3 weeks ago</span><span>•</span><span class="text-emerald-400">Relevance: 82%</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-white/5 mt-12 py-8 text-center">
+    <p class="text-sm text-zinc-600">KnowNet X — AI Knowledge Intelligence + Opportunity Finder</p>
+    <p class="text-xs text-zinc-700 mt-1">Built with FastAPI · Claude AI · React · No download required</p>
+  </footer>
+
+<script>
+const scholarships=[
+  {id:1,title:"Google Generation Scholarship",provider:"Google",source_url:"https://buildyourfuture.withgoogle.com/scholarships/generation-scholarship",deadline:"2026-12-15",amount:"$10,000 USD",eligibility:"Undergraduate students in computer science or related fields. Must demonstrate financial need and academic excellence.",field_tags:["computer_science","software_engineering","data_science"],country_scope:["global"],education_levels:["bachelor"],embedding:[0.8,0.7,0.9,0.6,0.5]},
+  {id:2,title:"Rhodes Scholarship",provider:"Rhodes Trust",source_url:"https://www.rhodeshouse.ox.ac.uk/",deadline:"2026-10-01",amount:"Full tuition + stipend",eligibility:"Outstanding students aged 18-24 with demonstrated leadership and academic excellence. All fields accepted.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master","phd"],embedding:[0.5,0.4,0.3,0.8,0.7]},
+  {id:3,title:"Fulbright Foreign Student Program",provider:"U.S. Department of State",source_url:"https://foreign.fulbrightonline.org/",deadline:"2026-05-15",amount:"Varies by country",eligibility:"International students seeking to study in the USA. Graduate-level research or study. Varies by home country.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master","phd"],embedding:[0.6,0.5,0.4,0.7,0.8]},
+  {id:4,title:"Microsoft AI Scholarship",provider:"Microsoft",source_url:"https://www.microsoft.com/en-us/research/careers/",deadline:"2026-11-30",amount:"$15,000 + internship",eligibility:"Students in AI, machine learning, or NLP. Must be enrolled in a graduate program. US or Canada preferred.",field_tags:["artificial_intelligence","machine_learning","nlp"],country_scope:["US","Canada"],education_levels:["master","phd"],embedding:[0.9,0.8,0.9,0.7,0.6]},
+  {id:5,title:"ETH Zurich Excellence Scholarship",provider:"ETH Zurich",source_url:"https://ethz.ch/studies/application/master/entry-requirements/excellence-scholarship-opportunity-programme.html",deadline:"2026-03-15",amount:"Full tuition + living expenses",eligibility:"Outstanding students applying for a Master's program at ETH Zurich. All STEM fields.",field_tags:["stem","engineering","computer_science","physics"],country_scope:["global"],education_levels:["master"],embedding:[0.7,0.8,0.6,0.5,0.4]},
+  {id:6,title:"Commonwealth Scholarship",provider:"Commonwealth Scholarship Commission",source_url:"https://cscuk.fcdo.gov.uk/",deadline:"2026-09-01",amount:"Full funding",eligibility:"Citizens of Commonwealth countries. Master's or PhD study in the UK. Demonstrated academic merit and development impact.",field_tags:["all_fields"],country_scope:["Commonwealth"],education_levels:["master","phd"],embedding:[0.4,0.5,0.3,0.6,0.7]},
+  {id:7,title:"Chevening Scholarship",provider:"UK Foreign Office",source_url:"https://www.chevening.org/",deadline:"2026-11-05",amount:"Full tuition + monthly stipend + travel",eligibility:"Future leaders from Chevening-eligible countries. One-year Master's degree in any subject at any UK university.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master"],embedding:[0.5,0.5,0.4,0.7,0.6]},
+  {id:8,title:"DAAD Scholarship Germany",provider:"DAAD",source_url:"https://www.daad.de/en/study-and-research-in-germany/scholarships/",deadline:"2026-08-31",amount:"€850-1,200/month + insurance + travel",eligibility:"Graduates from all disciplines with at least two years of professional experience. Strong academic record required.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master","phd"],embedding:[0.5,0.6,0.4,0.5,0.7]},
+  {id:9,title:"Gates Cambridge Scholarship",provider:"Bill & Melinda Gates Foundation",source_url:"https://www.gatescambridge.org/",deadline:"2026-10-12",amount:"Full cost + discretionary funding",eligibility:"Outstanding applicants from countries outside the UK to pursue a full-time postgraduate degree at Cambridge. Academic excellence + leadership + commitment to improving lives.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master","phd"],embedding:[0.6,0.5,0.5,0.8,0.7]},
+  {id:10,title:"Erasmus Mundus Joint Masters",provider:"European Union",source_url:"https://erasmus-plus.ec.europa.eu/opportunities/opportunities-for-individuals/students/erasmus-mundus-joint-masters",deadline:"2026-01-20",amount:"€1,400/month + tuition + travel",eligibility:"Students worldwide for integrated study programs at multiple European universities. Bachelor's degree required.",field_tags:["all_fields"],country_scope:["EU","global"],education_levels:["master"],embedding:[0.5,0.5,0.5,0.6,0.6]},
+  {id:11,title:"Turing AI Fellowship",provider:"Alan Turing Institute",source_url:"https://www.turing.ac.uk/",deadline:"2026-04-30",amount:"£30,000 + research budget",eligibility:"PhD students in artificial intelligence, data science, or computational statistics. UK-based research with industry partnership.",field_tags:["artificial_intelligence","machine_learning","data_science"],country_scope:["UK"],education_levels:["phd"],embedding:[0.95,0.9,0.85,0.7,0.6]},
+  {id:12,title:"UNSW International Scholarship",provider:"University of New South Wales",source_url:"https://www.unsw.edu.au/study/fees-and-scholarships/scholarships",deadline:"2026-06-30",amount:"$20,000 AUD/year",eligibility:"International students with strong academic merit. Available for undergraduate and postgraduate coursework programs.",field_tags:["all_fields"],country_scope:["global"],education_levels:["bachelor","master"],embedding:[0.4,0.4,0.4,0.5,0.5]},
+  {id:13,title:"Knight-Hennessy Scholars",provider:"Stanford University",source_url:"https://knight-hennessy.stanford.edu/",deadline:"2026-09-15",amount:"Full funding + travel + stipend",eligibility:"Graduate students at Stanford demonstrating independence of thought, purposeful leadership, and civic mindset. All fields.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master","phd"],embedding:[0.6,0.5,0.5,0.9,0.8]},
+  {id:14,title:"ADB-Japan Scholarship",provider:"Asian Development Bank",source_url:"https://www.adb.org/work-with-us/careers/japan-scholarship-program",deadline:"2026-07-31",amount:"Full tuition + monthly allowance + housing + travel",eligibility:"Citizens of ADB borrowing member countries. Master's in economics, management, science and technology, and other development-related fields.",field_tags:["economics","business","engineering","all_fields"],country_scope:["Asia"],education_levels:["master"],embedding:[0.5,0.5,0.4,0.6,0.7]},
+  {id:15,title:"Swiss Government Excellence Scholarship",provider:"Swiss Government",source_url:"https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",deadline:"2026-11-30",amount:"Monthly stipend + tuition waiver + health insurance",eligibility:"Researchers and artists from 180 countries. Master's or PhD at Swiss university or art school. Research proposal required.",field_tags:["all_fields"],country_scope:["global"],education_levels:["master","phd"],embedding:[0.5,0.5,0.5,0.6,0.6]},
+  {id:16,title:"Facebook Fellowship Program",provider:"Meta",source_url:"https://research.facebook.com/fellowship/",deadline:"2026-09-01",amount:"$42,000 + tuition + travel to conference",eligibility:"PhD students in computer science, engineering, or related fields. Research areas: AI, systems, security, AR/VR, data science.",field_tags:["computer_science","artificial_intelligence","data_science"],country_scope:["global"],education_levels:["phd"],embedding:[0.9,0.85,0.9,0.7,0.6]},
+  {id:17,title:"MEXT Scholarship Japan",provider:"Japanese Government",source_url:"https://www.studyinjapan.go.jp/en/planning/scholarship/",deadline:"2026-05-20",amount:"¥143,000-145,000/month + tuition + travel",eligibility:"International students for undergraduate, master's, or PhD at Japanese universities. Japanese language proficiency preferred.",field_tags:["all_fields"],country_scope:["global"],education_levels:["bachelor","master","phd"],embedding:[0.4,0.4,0.4,0.5,0.6]},
+  {id:18,title:"McCall MacBain Scholarship",provider:"McGill University",source_url:"https://mccallmacbain.org/",deadline:"2026-09-25",amount:"Full funding + mentorship + leadership development",eligibility:"Master's students at McGill demonstrating character, community engagement, leadership potential, entrepreneurial spirit, academic strength, and intellectual curiosity.",field_tags:["all_fields"],country_scope:["Canada","global"],education_levels:["master"],embedding:[0.5,0.5,0.5,0.7,0.7]},
+  {id:19,title:"Australia Awards Scholarship",provider:"Australian Government",source_url:"https://www.dfat.gov.au/people-to-people/australia-awards",deadline:"2026-04-30",amount:"Full tuition + living expenses + travel + health insurance",eligibility:"Citizens of participating countries in Asia, Pacific, Africa, and Middle East. Bachelor's or Master's at Australian universities. Return home requirement.",field_tags:["all_fields"],country_scope:["Asia","Pacific","Africa","Middle East"],education_levels:["bachelor","master"],embedding:[0.4,0.4,0.3,0.5,0.6]},
+  {id:20,title:"EPFL Excellence Fellowship",provider:"EPFL",source_url:"https://www.epfl.ch/schools/ic/ic-study-programs/master-programs/excellence-fellowships/",deadline:"2026-01-15",amount:"CHF 10,000/semester + accommodation",eligibility:"Outstanding Master's applicants in computer science, communication systems, data science, or cyber security at EPFL Switzerland.",field_tags:["computer_science","data_science","cyber_security"],country_scope:["global"],education_levels:["master"],embedding:[0.85,0.8,0.85,0.6,0.5]}
+];
+const universities=[
+  {id:1,name:"MIT",country:"US",rank:1,tuition:"high",fields:["computer_science","engineering","physics"],acceptance:"4%",deadline:"2026-01-01"},
+  {id:2,name:"Stanford University",country:"US",rank:3,tuition:"high",fields:["computer_science","artificial_intelligence","business"],acceptance:"4%",deadline:"2026-01-02"},
+  {id:3,name:"ETH Zurich",country:"Germany",rank:7,tuition:"low",fields:["engineering","computer_science","physics"],acceptance:"15%",deadline:"2026-03-15"},
+  {id:4,name:"University of Toronto",country:"Canada",rank:18,tuition:"medium",fields:["computer_science","artificial_intelligence","medicine"],acceptance:"43%",deadline:"2026-01-15"},
+  {id:5,name:"University of Oxford",country:"UK",rank:2,tuition:"high",fields:["all_fields"],acceptance:"17%",deadline:"2026-10-15"},
+  {id:6,name:"University of Melbourne",country:"Australia",rank:14,tuition:"medium",fields:["medicine","business","engineering"],acceptance:"70%",deadline:"2026-09-30"},
+  {id:7,name:"TU Munich",country:"Germany",rank:28,tuition:"low",fields:["engineering","computer_science"],acceptance:"20%",deadline:"2026-05-31"},
+  {id:8,name:"Imperial College London",country:"UK",rank:6,tuition:"high",fields:["engineering","medicine","computer_science"],acceptance:"14%",deadline:"2026-01-26"},
+  {id:9,name:"Carnegie Mellon University",country:"US",rank:24,tuition:"high",fields:["computer_science","artificial_intelligence","robotics"],acceptance:"15%",deadline:"2026-01-10"},
+  {id:10,name:"National University of Singapore",country:"Singapore",rank:8,tuition:"medium",fields:["computer_science","engineering","business"],acceptance:"15%",deadline:"2026-03-01"},
+  {id:11,name:"University of Tokyo",country:"Japan",rank:23,tuition:"low",fields:["all_fields"],acceptance:"30%",deadline:"2026-01-20"},
+  {id:12,name:"EPFL",country:"Switzerland",rank:32,tuition:"low",fields:["computer_science","engineering","data_science"],acceptance:"16%",deadline:"2026-01-15"},
+  {id:13,name:"University of British Columbia",country:"Canada",rank:34,tuition:"medium",fields:["computer_science","medicine","business"],acceptance:"53%",deadline:"2026-01-15"},
+  {id:14,name:"Tsinghua University",country:"China",rank:16,tuition:"low",fields:["engineering","computer_science","physics"],acceptance:"5%",deadline:"2026-03-01"},
+  {id:15,name:"University of Edinburgh",country:"UK",rank:22,tuition:"high",fields:["computer_science","medicine","artificial_intelligence"],acceptance:"10%",deadline:"2026-06-30"},
+  {id:16,name:"KAIST",country:"South Korea",rank:56,tuition:"low",fields:["computer_science","engineering","artificial_intelligence"],acceptance:"15%",deadline:"2026-05-15"}
+];
+let userProfile={};
+let scholarshipView='matches';
+function cosineSimilarity(a,b){if(!a||!b)return 0;let d=0,na=0,nb=0;for(let i=0;i<Math.min(a.length,b.length);i++){d+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i]}return na&&nb?d/(Math.sqrt(na)*Math.sqrt(nb)):0}
+function daysUntil(ds){return Math.ceil((new Date(ds)-new Date())/(1000*60*60*24))}
+function urgencyScore(ds){const d=daysUntil(ds);if(d<0)return 0;if(d<=7)return 1;if(d<=30)return 0.7;if(d<=90)return 0.4;return 0.2}
+function getUserEmbedding(){const f=userProfile.field||'all_fields';const m={'computer_science':[0.9,0.8,0.7,0.6,0.5],'artificial_intelligence':[0.95,0.9,0.85,0.7,0.6],'engineering':[0.7,0.9,0.6,0.5,0.4],'medicine':[0.3,0.4,0.2,0.5,0.8],'business':[0.5,0.4,0.3,0.8,0.7],'physics':[0.6,0.7,0.5,0.4,0.3],'data_science':[0.85,0.8,0.9,0.7,0.6],'all_fields':[0.5,0.5,0.5,0.5,0.5]};return m[f]||m['all_fields']}
+function matchScholarships(){const ue=getUserEmbedding();const uf=userProfile.field||'';const uc=userProfile.country||'';const ul=userProfile.level||'';return scholarships.map(s=>{const sem=cosineSimilarity(ue,s.embedding);let m=0,t=0;if(uf){t++;if(s.field_tags.some(x=>x.includes(uf)||uf.includes(x)))m++}if(uc){t++;if(s.country_scope.some(x=>x==='global'||x===uc))m++}if(ul){t++;if(s.education_levels.some(x=>x===ul))m++}const r=t>0?m/t:0.5;const u=urgencyScore(s.deadline);const sc=(0.60*sem)+(0.25*r)+(0.15*u);return{...s,match_score:sc,semantic_score:sem,rule_score:r,urgency_score:u}}).sort((a,b)=>b.match_score-a.match_score)}
+function switchTab(t){document.querySelectorAll('.tab-content').forEach(e=>e.classList.add('hidden'));document.getElementById('tab-'+t).classList.remove('hidden');document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.remove('text-blue-400','bg-blue-500/10');b.classList.add('text-zinc-400')});document.getElementById('nav-'+t).classList.add('text-blue-400','bg-blue-500/10');document.getElementById('nav-'+t).classList.remove('text-zinc-400');if(t==='scholarships')renderScholarships();if(t==='universities')renderUniversities()}
+function setScholarshipView(v){scholarshipView=v;document.getElementById('btn-matches').className=v==='matches'?'px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white':'px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-zinc-400 hover:text-zinc-100 hover:bg-white/10 transition-all';document.getElementById('btn-all').className=v==='all'?'px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white':'px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-zinc-400 hover:text-zinc-100 hover:bg-white/10 transition-all';document.getElementById('scholarship-filters').classList.toggle('hidden',v==='matches');renderScholarships()}
+function saveProfile(){userProfile={name:document.getElementById('p-name').value,email:document.getElementById('p-email').value,field:document.getElementById('p-field').value,level:document.getElementById('p-level').value,country:document.getElementById('p-country').value,year:document.getElementById('p-year').value,bio:document.getElementById('p-bio').value};let f=0;Object.values(userProfile).forEach(v=>{if(v&&v.toString().trim())f++});const p=Math.round((f/7)*100);document.getElementById('strength-bar').style.width=p+'%';document.getElementById('strength-text').textContent=p+'% complete — '+(p<50?'Add more details for better matches':'AI matching active');const mt=matchScholarships();document.getElementById('stat-scholarships').textContent=mt.filter(m=>m.match_score>0.3).length;document.getElementById('stat-universities').textContent=universities.filter(u=>(!userProfile.country||u.country===userProfile.country||userProfile.country==='global')&&(!userProfile.field||u.fields.some(x=>x.includes(userProfile.field)||userProfile.field.includes(x)))).length;document.getElementById('stat-score').textContent=mt.length>0?(mt[0].match_score*100).toFixed(0)+'%':'—';const st=document.getElementById('save-status');st.style.opacity='1';setTimeout(()=>st.style.opacity='0',3000);setTimeout(()=>switchTab('scholarships'),800)}
+function renderScholarships(){const c=document.getElementById('scholarships-list');const nd=document.getElementById('no-scholarships');let d=scholarshipView==='matches'?matchScholarships():[...scholarships];if(scholarshipView==='all'){const s=document.getElementById('sch-search')?.value.toLowerCase()||'';const f=document.getElementById('sch-field')?.value||'';const co=document.getElementById('sch-country')?.value||'';d=d.filter(x=>{if(s&&!x.title.toLowerCase().includes(s)&&!x.provider?.toLowerCase().includes(s))return false;if(f&&!x.field_tags.some(t=>t.includes(f)||f.includes(t)))return false;if(co&&!x.country_scope.some(c=>c==='global'||c===co))return false;return true})}if(scholarshipView==='matches'&&(!userProfile.field||!userProfile.level)){c.innerHTML='';nd.classList.remove('hidden');return}nd.classList.add('hidden');c.innerHTML=d.map(s=>{const dy=daysUntil(s.deadline);const uc=dy<0?'text-red-500':dy<=7?'text-amber-400':dy<=30?'text-yellow-400':'text-emerald-400';const mb=scholarshipView==='matches'?`<span class="bg-gradient-to-r from-blue-500 to-violet-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">${(s.match_score*100).toFixed(0)}% Match</span>`:'';const sd=scholarshipView==='matches'?`<div class="grid grid-cols-3 gap-2 mt-3 text-xs text-zinc-500"><div>Semantic: ${(s.semantic_score*100).toFixed(0)}%</div><div>Rules: ${(s.rule_score*100).toFixed(0)}%</div><div>Urgency: ${(s.urgency_score*100).toFixed(0)}%</div></div>`:'';return `<div class="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-white/20 transition-all hover:shadow-lg hover:shadow-blue-500/5"><div class="flex justify-between items-start mb-2"><h3 class="font-semibold text-zinc-100">${s.title}</h3><div class="flex items-center gap-2">${mb}</div></div><p class="text-sm text-zinc-500 mb-3">${s.provider||'Unknown Provider'}</p><div class="flex flex-wrap gap-3 text-sm text-zinc-400 mb-3">${s.amount?`<span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ${s.amount}</span>`:''}<span class="flex items-center gap-1 ${uc}"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> ${dy<0?'Expired':dy+' days left'}</span><span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg> ${s.country_scope.join(', ')}</span></div><div class="flex flex-wrap gap-1.5 mb-3">${s.field_tags.map(t=>`<span class="bg-white/5 text-zinc-400 text-xs px-2 py-0.5 rounded-md">${t}</span>`).join('')}</div>${sd}<a href="${s.source_url}" target="_blank" class="inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 font-medium mt-3">View Details <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></a></div>`}).join('')}
+function renderAllScholarships(){renderScholarships()}
+function renderUniversities(){const c=document.getElementById('universities-list');const co=document.getElementById('uni-country')?.value||'';const r=document.getElementById('uni-rank')?.value||'';const b=document.getElementById('uni-budget')?.value||'';let d=universities.filter(u=>{if(co&&u.country!==co)return false;if(r==='top10'&&u.rank>10)return false;if(r==='top50'&&u.rank>50)return false;if(r==='top100'&&u.rank>100)return false;if(b&&u.tuition!==b)return false;return true});d.sort((a,b)=>a.rank-b.rank);c.innerHTML=d.map(u=>{const mt=(!userProfile.field||u.fields.some(f=>f.includes(userProfile.field)||userProfile.field.includes(f)))&&(!userProfile.country||u.country===userProfile.country||userProfile.country==='global');return `<div class="bg-white/[0.03] border ${mt?'border-violet-500/30':'border-white/10'} rounded-xl p-5 hover:border-white/20 transition-all"><div class="flex items-start justify-between"><div class="flex-1"><div class="flex items-center gap-2 mb-1"><h3 class="font-semibold text-zinc-100">${u.name}</h3>${mt?'<span class="bg-violet-500/10 text-violet-400 text-xs px-2 py-0.5 rounded-full">Profile Match</span>':''}</div><div class="flex flex-wrap gap-3 text-sm text-zinc-400 mb-2"><span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg> ${u.country}</span><span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg> Rank #${u.rank}</span><span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg> ${u.acceptance} acceptance</span></div><div class="flex flex-wrap gap-1.5">${u.fields.map(f=>`<span class="bg-white/5 text-zinc-500 text-xs px-2 py-0.5 rounded-md">${f}</span>`).join('')}</div></div></div></div>`}).join('')||'<p class="text-zinc-500 text-center py-10">No universities match your filters.</p>'}
+function searchKnowledge(){const q=document.getElementById('knowledge-query').value.toLowerCase();const r=document.getElementById('knowledge-results');if(!q)return;for(let e of r.children){const t=e.querySelector('h3').textContent.toLowerCase();const d=e.querySelector('p').textContent.toLowerCase();const rel=(t.includes(q)?50:0)+(d.includes(q)?30:0)+Math.floor(Math.random()*20);const b=e.querySelector('.text-emerald-400');if(b)b.textContent=`Relevance: ${Math.min(99,rel)}%`;e.style.display=rel>10?'block':'none'}}
+renderScholarships();
+renderUniversities();
+</script>
+</body>
+</html>
